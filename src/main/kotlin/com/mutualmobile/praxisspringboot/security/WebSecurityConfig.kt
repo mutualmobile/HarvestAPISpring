@@ -45,16 +45,14 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     lateinit var userService: PraxisUserService
 
     @Autowired
+    lateinit var passwordEncoderBean: PasswordEncoder
+
+    @Autowired
     @Throws(Exception::class)
     fun configureAuth(auth: AuthenticationManagerBuilder) {
         auth
             .userDetailsService(userService)
-            .passwordEncoder(passwordEncoderBean())
-    }
-
-    @Bean
-    fun passwordEncoderBean(): PasswordEncoder {
-        return BCryptPasswordEncoder()
+            .passwordEncoder(passwordEncoderBean)
     }
 
     @Bean
