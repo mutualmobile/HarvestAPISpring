@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Praxis</title>
+    <style>
+
+        /**
+        * Avoid browser level font resizing.
+        * 1. Windows Mobile
+        * 2. iOS / OSX
+        */
+        body,
+        table,
+        td,
+        a {
+            -ms-text-size-adjust: 100%; /* 1 */
+            -webkit-text-size-adjust: 100%; /* 2 */
+        }
+
+        /**
+         * Remove extra space added to tables and cells in Outlook.
+         */
+        table,
+        td {
+            mso-table-rspace: 0pt;
+            mso-table-lspace: 0pt;
+        }
+
+        /**
+         * Better fluid images in Internet Explorer.
+         */
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+
+        /**
+         * Remove blue links for iOS devices.
+         */
+        a[x-apple-data-detectors] {
+            font-family: inherit !important;
+            font-size: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+            color: inherit !important;
+            text-decoration: none !important;
+        }
+
+        /**
+         * Fix centering issues in Android 4.4.
+         */
+        div[style*="margin: 16px 0;"] {
+            margin: 0 !important;
+        }
+
+        body {
+            width: 100% !important;
+            height: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        /**
+         * Collapse table borders to avoid space between cells.
+         */
+        table {
+            border-collapse: collapse !important;
+        }
+
+        a {
+            color: #1a82e2;
+        }
+
+        img {
+            height: auto;
+            line-height: 100%;
+            text-decoration: none;
+            border: 0;
+            outline: none;
+        }
+    </style>
+</head>
+<body style="background-color: white;">
+
+<table style="background-color: white;  padding-top: 20px; width: 100%;margin-top: 16px">
+
+
+    <table style="background-color: #F2F2F2; margin: 32px;  padding-top: 20px;">
+
+        <tr>
+            <td>
+                <table style="background-color: #F5F6F0; margin: 32px;  padding-top: 20px;">
+                    <tr>
+                        <td style="text-align: center">
+                            <h1 style="margin: 0;color: #C85E48;  font-weight: 600; "
+                                th:text="${title}">
+                                Thank you! Title</h1>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align: center">
+                            <h2 style="margin-top:16px; margin-bottom:0 ;color: black;font-weight: 300;  "
+                                th:text="${subtitle}">
+                                This is subtitle</h2>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align: center">
+                            <h4 style="margin: 32px;color: black; font-weight: 300; "
+                                th:text="${message}">
+                                Common notification text shows here!</h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center" th:if="${action != ''}">
+                            <table style="margin-bottom: 8px" align="center">
+                                <tr>
+                                    <td style="border-radius: 6px; background-color: #C85E48">
+                                        <a th:href="${link}" th:text="${action}" role="button"
+                                           style="display: inline-block; padding: 8px 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">View Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+
+    </table>
+
+    <table align="center">
+        <tr>
+            <td style="text-align: center;">
+                <h4 style="font-family: Quicksand;color: gray">Powered by</h4>
+            </td>
+        </tr>
+
+        <tr style="margin: 32px">
+            <td style="text-align: center;margin-bottom: 32px">
+                <img th:src="@{https://assets.website-files.com/5f84aec116a4676c8f4c934d/5f8e7005284a7961511a6a9a_mutual_mobile.svg}"
+                     style="vertical-align: middle; width: 100px; height: 32px"/>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="text-align: center;">
+                <img th:src="@{https://assets.website-files.com/5f84aec116a4676c8f4c934d/606d74f01e784fa00844a772_Facebook.svg}"
+                     style="margin-top: 16px; margin-right: 4px; width: 16px; height: 16px"/>
+                <img th:src="@{https://assets.website-files.com/5f84aec116a4676c8f4c934d/606d74f01e784f368244a773_Instagram.svg}"
+                     style="margin-top: 16px; margin-right: 4px; width: 16px; height: 16px"/>
+                <img th:src="@{https://assets.website-files.com/5f84aec116a4676c8f4c934d/606d74f01e784febd744a777_YouTube.svg}"
+                     style="margin-top: 16px;  width: 16px; height: 16px"/>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="text-align: center;margin: 16px">
+                <label style="margin: 16px">
+                    Warning: Do not forward this email.
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; margin: 16px">
+                <label style="margin: 16px">
+                    Note: For an optimal experience, please log in with Chrome or Safari web browsers
+                </label>
+            </td>
+        </tr>
+    </table>
+
+
+
+</table>
+
+</body>
+
+</html>
