@@ -45,9 +45,6 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     lateinit var userService: PraxisUserService
 
     @Autowired
-    lateinit var passwordEncoderService: PasswordEncoderService
-
-    @Autowired
     @Throws(Exception::class)
     fun configureAuth(auth: AuthenticationManagerBuilder) {
         auth
@@ -57,7 +54,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Bean
     fun passwordEncoderBean(): PasswordEncoder {
-        return passwordEncoderService.providePWDEncoder()
+        return BCryptPasswordEncoder()
     }
 
     @Bean
@@ -66,9 +63,6 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         return super.authenticationManagerBean()
     }
 
-    // Details omitted for brevity
-
-    // Details omitted for brevity
     @Throws(java.lang.Exception::class)
     override fun configure(httpSecurity: HttpSecurity) {
         // Enable CORS and disable CSRF

@@ -1,8 +1,6 @@
 package com.mutualmobile.praxisspringboot.security
 
 import com.mutualmobile.praxisspringboot.services.user.PraxisUserService
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -17,8 +15,6 @@ import javax.servlet.http.HttpServletResponse
 
 @Component
 class JwtRequestFilter : OncePerRequestFilter() {
-    private val log: Logger = LoggerFactory.getLogger(JwtRequestFilter::class.java)
-
     @Autowired
     lateinit var praxisUserService: PraxisUserService
 
