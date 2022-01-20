@@ -11,12 +11,11 @@ import com.mutualmobile.praxisspringboot.data.user.RequestUser
 import com.mutualmobile.praxisspringboot.entities.user.DBFcmToken
 import com.mutualmobile.praxisspringboot.entities.user.DBRole
 import com.mutualmobile.praxisspringboot.entities.user.DBPraxisUser
-import com.mutualmobile.praxisspringboot.security.JwtTokenUtil
+import com.mutualmobile.praxisspringboot.security.jwt.JwtTokenUtil
 import com.mutualmobile.praxisspringboot.security.RefreshTokenService
 import com.mutualmobile.praxisspringboot.repositories.FCMRepository
 import com.mutualmobile.praxisspringboot.repositories.RoleRepository
 import com.mutualmobile.praxisspringboot.repositories.UserRepository
-import com.mutualmobile.praxisspringboot.services.user.toDBUser
 import com.mutualmobile.praxisspringboot.util.Utility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus

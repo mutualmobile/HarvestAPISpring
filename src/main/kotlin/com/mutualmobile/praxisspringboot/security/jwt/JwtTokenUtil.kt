@@ -1,4 +1,4 @@
-package com.mutualmobile.praxisspringboot.security
+package com.mutualmobile.praxisspringboot.security.jwt
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts

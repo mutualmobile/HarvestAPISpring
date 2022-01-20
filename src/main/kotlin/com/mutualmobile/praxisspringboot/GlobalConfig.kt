@@ -14,9 +14,4 @@ class GlobalConfig {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
         println("Date in UTC: " + Date().toString())
     }
-
-    @Bean
-    fun passwordEncoder(): BCryptPasswordEncoder {
-        return BCryptPasswordEncoder()
-    }
 }

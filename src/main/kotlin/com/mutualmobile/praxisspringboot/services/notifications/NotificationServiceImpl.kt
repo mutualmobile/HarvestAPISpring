@@ -5,7 +5,7 @@ import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.notification.NotificationModel
 import com.mutualmobile.praxisspringboot.data.models.notification.NotificationStatus
 import com.mutualmobile.praxisspringboot.entities.notification.DBNotification
-import com.mutualmobile.praxisspringboot.security.JwtTokenUtil
+import com.mutualmobile.praxisspringboot.security.jwt.JwtTokenUtil
 import com.mutualmobile.praxisspringboot.repositories.NotificationsRepository
 import com.mutualmobile.praxisspringboot.services.user.UserDataService
 import org.springframework.beans.factory.annotation.Autowired

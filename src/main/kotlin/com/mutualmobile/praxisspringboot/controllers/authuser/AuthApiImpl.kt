@@ -5,7 +5,7 @@ import com.mutualmobile.praxisspringboot.data.models.auth.AuthResponse
 import com.mutualmobile.praxisspringboot.data.models.auth.LogOutRequest
 import com.mutualmobile.praxisspringboot.data.models.auth.RequestUserChangePassword
 import com.mutualmobile.praxisspringboot.data.models.auth.TokenRefreshRequest
-import com.mutualmobile.praxisspringboot.security.JwtTokenUtil
+import com.mutualmobile.praxisspringboot.security.jwt.JwtTokenUtil
 import com.mutualmobile.praxisspringboot.security.RefreshTokenService
 import com.mutualmobile.praxisspringboot.services.user.UserAuthService
 import com.mutualmobile.praxisspringboot.data.user.RequestUser

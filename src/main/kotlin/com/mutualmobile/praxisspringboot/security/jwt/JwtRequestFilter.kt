@@ -1,4 +1,4 @@
-package com.mutualmobile.praxisspringboot.security
+package com.mutualmobile.praxisspringboot.security.jwt
 
 import com.mutualmobile.praxisspringboot.services.user.PraxisUserService
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,34 +1,26 @@
 package com.mutualmobile.praxisspringboot.security
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.mutualmobile.praxisspringboot.controllers.Endpoint
 import com.mutualmobile.praxisspringboot.controllers.Endpoint.UN_AUTH_API
+import com.mutualmobile.praxisspringboot.security.jwt.JwtRequestFilter
 import com.mutualmobile.praxisspringboot.services.user.PraxisUserService
 import com.mutualmobile.praxisspringboot.util.Utility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
-import org.springframework.http.MediaType
 import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.BadCredentialsException
-import org.springframework.security.authentication.InternalAuthenticationServiceException
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
-import org.springframework.security.core.AuthenticationException
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
-
 
 @Configuration
 @EnableWebSecurity
@@ -38,11 +30,15 @@ import javax.servlet.http.HttpServletResponse
     prePostEnabled = true
 )
 class WebSecurityConfig : WebSecurityConfigurerAdapter() {
+
     @Autowired
     lateinit var jwtAuthenticationTokenFilter: JwtRequestFilter
 
     @Autowired
     lateinit var userService: PraxisUserService
+
+    @Autowired
+    lateinit var praxisAuthEntryPoint: PraxisAuthEntryPoint
 
     @Autowired
     lateinit var passwordEncoderBean: PasswordEncoder
@@ -76,22 +72,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         // Set unauthorized requests exception handler
         http = http
             .exceptionHandling()
-            .authenticationEntryPoint { request: HttpServletRequest?, response: HttpServletResponse, ex: AuthenticationException ->
-                if (ex is InternalAuthenticationServiceException || ex is BadCredentialsException) {
-                    response.contentType = MediaType.APPLICATION_JSON_VALUE
-                    response.status = HttpServletResponse.SC_UNAUTHORIZED
-                    val body: MutableMap<String, Any> = HashMap()
-                    body["message"] = "Email or password is incorrect! Please retry."
-                    val mapper = ObjectMapper()
-                    mapper.writeValue(response.outputStream, body)
-                } else {
-                    response.sendError(
-                        HttpServletResponse.SC_UNAUTHORIZED,
-                        ex.message
-                    )
-                }
-
-            }
+            .authenticationEntryPoint(praxisAuthEntryPoint)
             .and()
 
         // Set permissions on endpoints

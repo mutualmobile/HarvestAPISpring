@@ -7,7 +7,7 @@ import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.auth.RequestUserChangePassword
 import com.mutualmobile.praxisspringboot.data.user.RequestUser
 import com.mutualmobile.praxisspringboot.entities.user.DBPraxisUser
-import com.mutualmobile.praxisspringboot.security.JwtTokenUtil
+import com.mutualmobile.praxisspringboot.security.jwt.JwtTokenUtil
 import com.mutualmobile.praxisspringboot.repositories.RoleRepository
 import com.mutualmobile.praxisspringboot.repositories.UserRepository
 import com.mutualmobile.praxisspringboot.util.Utility
