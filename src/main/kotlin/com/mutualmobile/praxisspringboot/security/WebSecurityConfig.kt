@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -21,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
+
 
 @Configuration
 @EnableWebSecurity
@@ -79,6 +81,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         http.authorizeRequests()
             .antMatchers(
                 "/",
+                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
                 "${UN_AUTH_API}/**",
                 "${Endpoint.FORGOT_PASSWORD}/**",
                 "${Endpoint.REFRESH_TOKEN}/**",
@@ -116,6 +119,14 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         http.addFilterBefore(
             jwtAuthenticationTokenFilter,
             UsernamePasswordAuthenticationFilter::class.java
+        )
+    }
+
+    override fun configure(web: WebSecurity) {
+        web.ignoring().antMatchers(
+            "/v3/api-docs",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
         )
     }
 

@@ -2,7 +2,9 @@ Spring Boot Kotlin Base Project
 ===============
 This is the WIP project for production ready using spring boot technology stack.
 
-Spring Framworks used
+🚧 Swagger and openapi docs integration http://localhost:5001/swagger-ui/index.html
+
+Spring Frameworks used
 ----------
 1. [Spring Boot](https://projects.spring.io/spring-boot/)
 2. [Spring Boot Actuator](https://spring.io/guides/gs/actuator-service/)
