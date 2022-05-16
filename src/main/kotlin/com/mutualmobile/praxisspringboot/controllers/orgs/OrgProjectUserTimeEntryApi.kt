@@ -1,12 +1,13 @@
-package com.mutualmobile.praxisspringboot.data.models.orgs
+package com.mutualmobile.praxisspringboot.controllers.orgs
 
 import com.mutualmobile.praxisspringboot.data.ApiResponse
+import com.mutualmobile.praxisspringboot.data.models.orgs.TimeEntry
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestParam
 
-interface OrgProjectUserTimeEntry {
+interface OrgProjectUserTimeEntryApi {
     @GetMapping
     fun getTimeEntries(
         @RequestParam orgId: String?,
