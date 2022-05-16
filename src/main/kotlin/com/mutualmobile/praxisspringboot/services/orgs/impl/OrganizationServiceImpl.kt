@@ -9,12 +9,33 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.data.domain.Sort
+import org.springframework.data.repository.findByIdOrNull
 
 @Service
 class OrganizationServiceImpl : OrganizationService {
 
     @Autowired
     lateinit var orgRepository: OrgRepository
+
+    override fun createOrganization(harvestOrganization: HarvestOrganization): HarvestOrganization {
+        val organization = orgRepository.save(harvestOrganization.toDBHarvestOrganization())
+        return organization.toHarvestOrg()
+    }
+
+    override fun updateOrganization(harvestOrganization: HarvestOrganization): HarvestOrganization? {
+        val org = orgRepository.findByIdOrNull(harvestOrganization.id)
+        org?.let {
+            val organization = orgRepository.save(
+                org.copy(
+                    name = harvestOrganization.name,
+                    website = harvestOrganization.website,
+                    imgUrl = harvestOrganization.imgUrl
+                )
+            )
+            return organization.toHarvestOrg()
+        }
+        return null
+    }
 
     override fun listOrganizations(
         offset: Int,
@@ -34,6 +55,10 @@ class OrganizationServiceImpl : OrganizationService {
     }
 }
 
+private fun HarvestOrganization.toDBHarvestOrganization(): DBOrganization {
+    return DBOrganization(this.name, this.website, this.imgUrl)
+}
+
 fun DBOrganization.toHarvestOrg(): HarvestOrganization {
-    return HarvestOrganization(this.name, this.website, this.imgUrl)
+    return HarvestOrganization(this.name, this.website, this.imgUrl, this.id)
 }

@@ -15,15 +15,17 @@ class OrganizationApiImpl : OrganizationApi {
     lateinit var organizationService: OrganizationService
 
     override fun getOrganizations(offset: Int?, limit: Int?, search: String?): List<HarvestOrganization> {
-        val page = organizationService.listOrganizations(offset ?: 0, limit ?: 10,search)
+        val page = organizationService.listOrganizations(offset ?: 0, limit ?: 10, search)
         return page.toList().map { it.toHarvestOrg() }
     }
 
     override fun createOrganization(harvestOrganization: HarvestOrganization): ApiResponse<HarvestOrganization> {
-        TODO("Not yet implemented")
+        val result = organizationService.createOrganization(harvestOrganization)
+        return ApiResponse(message = "Organization created", data = result)
     }
 
     override fun updateOrganization(harvestOrganization: HarvestOrganization): ApiResponse<HarvestOrganization> {
-        TODO("Not yet implemented")
+        val result = organizationService.updateOrganization(harvestOrganization)
+        return ApiResponse(message = "Organization updated", data = result)
     }
 }
