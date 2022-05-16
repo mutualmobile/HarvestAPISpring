@@ -22,7 +22,7 @@ object Endpoint {
     const val NOTIFICATIONS = "$API_URL/notifications"
     const val NOTIFICATION_COUNT = "$API_URL/notificationCount"
 
-    //Org main user
+    //Org main user // TODO write security for these endpoints.
     const val ORGANIZATION = "$API_URL$ADMIN/organization"
     const val ORG_USERS = "$API_URL/organization/users"
     const val ORG_USER = "$API_URL/organization/user"
