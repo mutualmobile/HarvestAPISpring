@@ -1,3 +1,7 @@
 package com.mutualmobile.praxisspringboot.data.models.orgs
 
-data class HarvestOrganization(val name: String)//TODO add more fields to this request
+data class HarvestOrganization(
+    val name: String,
+    val website: String,
+    val imgUrl: String
+)//TODO add more fields to this request
