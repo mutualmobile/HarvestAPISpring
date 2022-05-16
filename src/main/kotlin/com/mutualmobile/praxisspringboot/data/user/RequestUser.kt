@@ -2,6 +2,7 @@ package com.mutualmobile.praxisspringboot.data.user
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.mutualmobile.praxisspringboot.data.models.orgs.HarvestOrganization
 import com.mutualmobile.praxisspringboot.data.user.DevicePlatform
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
@@ -27,5 +28,6 @@ data class RequestUser(
     var modifiedTime: String? = null,
     @Enumerated(EnumType.STRING)
     var platform: DevicePlatform? = null,
-    var orgId: String
+    var orgId: String? = null,
+    var harvestOrganization: HarvestOrganization? = null
 )

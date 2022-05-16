@@ -126,6 +126,7 @@ class UserAuthServiceImpl : UserAuthService {
         organization?.let {
             return registerOrganizationAvailable(requestUser, resetPassword)
         } ?: run {
+            // TODO create organization here by using RequestUser.OrganizationModel
             return ResponseEntity.ok(
                 AuthResponse(
                     null,

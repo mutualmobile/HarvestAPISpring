@@ -1,6 +1,7 @@
 package com.mutualmobile.praxisspringboot.security
 
 import com.mutualmobile.praxisspringboot.controllers.Endpoint
+import com.mutualmobile.praxisspringboot.controllers.Endpoint.ORGANIZATION
 import com.mutualmobile.praxisspringboot.controllers.Endpoint.ORGANIZATIONS
 import com.mutualmobile.praxisspringboot.controllers.Endpoint.TIME_ENTRIES
 import com.mutualmobile.praxisspringboot.controllers.Endpoint.UN_AUTH_API
@@ -113,6 +114,14 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .antMatchers(HttpMethod.GET, "${TIME_ENTRIES}/**")
             .hasAnyAuthority(
                 UserRole.HARVEST_SUPER_ADMIN.role, UserRole.ORG_ADMIN.role, UserRole.ORG_USER.role
+            )
+            .antMatchers(HttpMethod.POST,"${ORGANIZATION}/**")
+            .hasAnyAuthority(
+                 UserRole.ORG_ADMIN.role
+            )
+            .antMatchers(HttpMethod.PUT,"${ORGANIZATION}/**")
+            .hasAnyAuthority(
+                UserRole.ORG_ADMIN.role
             )
             .antMatchers(
                 HttpMethod.GET,
