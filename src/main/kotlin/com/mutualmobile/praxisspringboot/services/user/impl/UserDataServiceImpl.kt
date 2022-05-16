@@ -1,4 +1,4 @@
-package com.mutualmobile.praxisspringboot.services.user
+package com.mutualmobile.praxisspringboot.services.user.impl
 
 import com.mutualmobile.praxisspringboot.communication.email.PraxisNotification
 import com.mutualmobile.praxisspringboot.communication.email.PraxisNotificationService
@@ -6,10 +6,12 @@ import com.mutualmobile.praxisspringboot.controllers.authuser.getToken
 import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.auth.RequestUserChangePassword
 import com.mutualmobile.praxisspringboot.data.user.RequestUser
-import com.mutualmobile.praxisspringboot.entities.user.DBPraxisUser
+import com.mutualmobile.praxisspringboot.entities.user.DBHarvestUser
 import com.mutualmobile.praxisspringboot.security.jwt.JwtTokenUtil
 import com.mutualmobile.praxisspringboot.repositories.RoleRepository
 import com.mutualmobile.praxisspringboot.repositories.UserRepository
+import com.mutualmobile.praxisspringboot.services.user.PraxisUserService
+import com.mutualmobile.praxisspringboot.services.user.UserDataService
 import com.mutualmobile.praxisspringboot.util.Utility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -44,13 +46,13 @@ class UserDataServiceImpl : UserDataService {
     @Autowired
     lateinit var praxisUserService: PraxisUserService
 
-    override fun getUser(httpServletRequest: HttpServletRequest): DBPraxisUser? {
+    override fun getUser(httpServletRequest: HttpServletRequest): DBHarvestUser? {
         val username = jwtTokenUtil.getUserIdFromToken(httpServletRequest.getToken()!!)
         val userDetails: UserDetails? = praxisUserService.loadUserByUsername(username)
         return userRepository.findByEmailOrId(userDetails?.username)
     }
 
-    override fun getUserByRole(userId: String, role: String): DBPraxisUser? {
+    override fun getUserByRole(userId: String, role: String): DBHarvestUser? {
         val user = userRepository.findById(userId).orElse(null)
         user?.let {
             val userRole = roleRepository.findByUserId(it.id).firstOrNull()
@@ -64,7 +66,7 @@ class UserDataServiceImpl : UserDataService {
     override fun saveUserProfilePic(url: URL?, id: String) {
         val user = userRepository.findById(id).orElse(null)
         user?.let {
-            it.profilePic = url.toString()
+            it.avatarUrl = url.toString()
             it.lastModifiedTime = Date()
             userRepository.save(user)
         }
@@ -80,11 +82,11 @@ class UserDataServiceImpl : UserDataService {
     }
 
     override fun postForgotPassword(email: String): ResponseEntity<ApiResponse<Void>?> {
-        val dbPraxisUser: DBPraxisUser? = userRepository.findByEmailOrId(email)
-        dbPraxisUser?.let {
+        val dbHarvestUser: DBHarvestUser? = userRepository.findByEmailOrId(email)
+        dbHarvestUser?.let {
             val token = jwtTokenUtil.generateJWTToken(email)
-            dbPraxisUser.resetPasswordToken = token
-            userRepository.save(dbPraxisUser)
+            dbHarvestUser.resetPasswordToken = token
+            userRepository.save(dbHarvestUser)
             val resetPasswordLink = Utility.getSiteURL() + "/resetPassword?token=" + token;
             sendEmail(email, resetPasswordLink, it.name())
             return ResponseEntity.ok(ApiResponse(message = "We have sent a reset password link to your email. Please check."))
@@ -121,7 +123,7 @@ class UserDataServiceImpl : UserDataService {
         }
     }
 
-    private fun updatePassword(praxisUser: DBPraxisUser, newPassword: String) {
+    private fun updatePassword(praxisUser: DBHarvestUser, newPassword: String) {
         praxisUser.password = passwordEncoder.encode(newPassword)
         praxisUser.resetPasswordToken = null
         userRepository.save(praxisUser)
@@ -148,7 +150,7 @@ class UserDataServiceImpl : UserDataService {
 
     override fun changePassword(
         request: RequestUserChangePassword,
-        user: DBPraxisUser?
+        user: DBHarvestUser?
     ): ResponseEntity<ApiResponse<Void>?> {
         user?.let {
             if (!passwordEncoder.matches(request.oldPass, it.password)) {
@@ -171,8 +173,8 @@ class UserDataServiceImpl : UserDataService {
     }
 
     override fun updateUser(body: RequestUser?, httpServletRequest: HttpServletRequest): ApiResponse<Void>? {
-        val dbPraxisUser: DBPraxisUser? = getUser(httpServletRequest)
-        dbPraxisUser?.let { updatedDbUser ->
+        val dbHarvestUser: DBHarvestUser? = getUser(httpServletRequest)
+        dbHarvestUser?.let { updatedDbUser ->
             body?.firstName?.let {
                 updatedDbUser.firstName = it
             }
@@ -188,24 +190,26 @@ class UserDataServiceImpl : UserDataService {
 
 }
 
-fun DBPraxisUser?.toRequestUser(): RequestUser {
+fun DBHarvestUser.toRequestUser(): RequestUser {
     return RequestUser(
-        id = this?.id,
-        firstName = this?.firstName?.trim(),
-        lastName = this?.lastName?.trim(),
-        email = this?.email?.trim(),
+        id = this.id,
+        firstName = this.firstName?.trim(),
+        lastName = this.lastName?.trim(),
+        email = this.email?.trim(),
         null,
-        profilePic = this?.profilePic,
-        modifiedTime = this?.lastModifiedTime?.toString()
+        profilePic = this.avatarUrl,
+        modifiedTime = this.lastModifiedTime?.toString(),
+        orgId = this.orgId
     )
 }
 
-fun RequestUser?.toDBUser(): DBPraxisUser {
-    return DBPraxisUser(
+fun RequestUser?.toDBUser(): DBHarvestUser {
+    return DBHarvestUser(
         email = this?.email?.trim(),
         password = this?.password,
         firstName = this?.firstName?.trim(),
         lastName = this?.lastName?.trim(),
-        profilePic = this?.profilePic,
+        avatarUrl = this?.profilePic,
+        orgId = this?.orgId!!
     )
 }

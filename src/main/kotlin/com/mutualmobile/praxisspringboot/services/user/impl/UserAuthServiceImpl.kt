@@ -1,4 +1,4 @@
-package com.mutualmobile.praxisspringboot.services.user
+package com.mutualmobile.praxisspringboot.services.user.impl
 
 import com.mutualmobile.praxisspringboot.communication.email.PraxisNotification
 import com.mutualmobile.praxisspringboot.communication.email.PraxisNotificationService
@@ -10,14 +10,18 @@ import com.mutualmobile.praxisspringboot.data.user.DevicePlatform
 import com.mutualmobile.praxisspringboot.data.user.RequestUser
 import com.mutualmobile.praxisspringboot.entities.user.DBFcmToken
 import com.mutualmobile.praxisspringboot.entities.user.DBRole
-import com.mutualmobile.praxisspringboot.entities.user.DBPraxisUser
+import com.mutualmobile.praxisspringboot.entities.user.DBHarvestUser
 import com.mutualmobile.praxisspringboot.security.jwt.JwtTokenUtil
 import com.mutualmobile.praxisspringboot.security.RefreshTokenService
 import com.mutualmobile.praxisspringboot.repositories.FCMRepository
 import com.mutualmobile.praxisspringboot.repositories.RoleRepository
 import com.mutualmobile.praxisspringboot.repositories.UserRepository
+import com.mutualmobile.praxisspringboot.repositories.orgs.OrgRepository
+import com.mutualmobile.praxisspringboot.services.user.PraxisUserService
+import com.mutualmobile.praxisspringboot.services.user.UserAuthService
 import com.mutualmobile.praxisspringboot.util.Utility
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
@@ -36,6 +40,9 @@ class UserAuthServiceImpl : UserAuthService {
 
     @Autowired
     lateinit var userRepository: UserRepository
+
+    @Autowired
+    lateinit var orgRepository: OrgRepository
 
     @Autowired
     lateinit var refreshTokenService: RefreshTokenService
@@ -59,7 +66,7 @@ class UserAuthServiceImpl : UserAuthService {
     lateinit var notificationService: PraxisNotificationService
 
 
-    override fun usernameExists(username: String?): DBPraxisUser? {
+    override fun usernameExists(username: String?): DBHarvestUser? {
         return userRepository.findByEmailOrId(username!!)
     }
 
@@ -102,14 +109,7 @@ class UserAuthServiceImpl : UserAuthService {
             ifUserExists(requestUser)?.let {
                 return it
             }
-            val dbUser = saveUser(requestUser, resetPassword)
-            defineRoleAndType(requestUser, dbUser)
-            return ResponseEntity.ok(
-                AuthResponse(
-                    null,
-                    "Registration Successful! Please verify your email before getting started!"
-                )
-            )
+            return registerWithOrganization(requestUser, resetPassword)
         } ?: run {
             return ResponseEntity(
                 AuthResponse(message = "Request body is null!"),
@@ -118,7 +118,38 @@ class UserAuthServiceImpl : UserAuthService {
         }
     }
 
-    private fun verificationEmail(token: String?, dbUser: DBPraxisUser) {
+    private fun registerWithOrganization(
+        requestUser: RequestUser,
+        resetPassword: Boolean
+    ): ResponseEntity<AuthResponse> {
+        val organization = orgRepository.findByIdOrNull(requestUser.orgId)
+        organization?.let {
+            return registerOrganizationAvailable(requestUser, resetPassword)
+        } ?: run {
+            return ResponseEntity.ok(
+                AuthResponse(
+                    null,
+                    "Your organization is not yet registered with us, please signup as organization first!"
+                )
+            )
+        }
+    }
+
+    private fun registerOrganizationAvailable(
+        requestUser: RequestUser,
+        resetPassword: Boolean
+    ): ResponseEntity<AuthResponse> {
+        val dbUser = saveUser(requestUser, resetPassword)
+        defineRoleAndType(requestUser, dbUser)
+        return ResponseEntity.ok(
+            AuthResponse(
+                null,
+                "Registration Successful! Please verify your email before getting started!"
+            )
+        )
+    }
+
+    private fun verificationEmail(token: String?, dbUser: DBHarvestUser) {
         val verification = Utility.getApiBaseURL() + "${Endpoint.EMAIL_VERIFY}?${Endpoint.Params.TOKEN}=" + token;
         sendVerifyEmail(dbUser.email, verification, dbUser.name())
     }
@@ -133,7 +164,7 @@ class UserAuthServiceImpl : UserAuthService {
         return null
     }
 
-    private fun saveUser(requestUser: RequestUser?, resetPassword: Boolean): DBPraxisUser {
+    private fun saveUser(requestUser: RequestUser?, resetPassword: Boolean): DBHarvestUser {
         requestUser?.password = passwordEncoder.encode(requestUser?.password)
         val token = jwtTokenUtil.generateJWTToken(requestUser?.email!!)
         val dbUser = requestUser.toDBUser()
@@ -151,7 +182,7 @@ class UserAuthServiceImpl : UserAuthService {
 
     private fun defineRoleAndType(
         requestUser: RequestUser,
-        dbUser: DBPraxisUser
+        dbUser: DBHarvestUser
     ) {
         roleRepository.save(DBRole(requestUser.role, dbUser.id))
     }
@@ -182,7 +213,7 @@ class UserAuthServiceImpl : UserAuthService {
     }
 
     private fun loginWhenNotVerified(
-        dbUser: DBPraxisUser,
+        dbUser: DBHarvestUser,
         user: User
     ): ResponseEntity<AuthResponse> {
         try {
@@ -200,7 +231,7 @@ class UserAuthServiceImpl : UserAuthService {
     }
 
     private fun loginWhenVerified(
-        dbUser: DBPraxisUser,
+        dbUser: DBHarvestUser,
         pushToken: String?,
         platform: DevicePlatform?
     ): ResponseEntity<AuthResponse> {
@@ -217,17 +248,17 @@ class UserAuthServiceImpl : UserAuthService {
         return ResponseEntity.ok(resUser)
     }
 
-    override fun requestUser(token: String): RequestUser {
+    override fun requestUser(token: String): RequestUser? {
         val username = jwtTokenUtil.getUserIdFromToken(token)
         val userDetails: UserDetails? = praxisUserService.loadUserByUsername(username)
         val user = userRepository.findByEmailOrId(userDetails?.username!!)
-        val resUser = user.toRequestUser()
+        val resUser = user?.toRequestUser()
         val role = roleRepository.findByUserId(user?.id)
-        resUser.role = role.first().name
+        resUser?.role = role.first().name
         return resUser
     }
 
-    override fun getDbUser(token: String): DBPraxisUser? {
+    override fun getDbUser(token: String): DBHarvestUser? {
         val username = jwtTokenUtil.getUserIdFromToken(token)
         val userDetails: UserDetails? = praxisUserService.loadUserByUsername(username)
         return userRepository.findByEmailOrId(userDetails?.username!!)

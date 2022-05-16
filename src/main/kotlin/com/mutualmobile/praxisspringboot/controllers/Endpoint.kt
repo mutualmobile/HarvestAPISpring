@@ -5,6 +5,7 @@ object Endpoint {
     private const val API_URL = "/api/v1"
     private const val ADMIN = "/admin"
     const val UN_AUTH_API = "$API_URL/public"
+    const val ORGANIZATIONS = "$UN_AUTH_API/organizations"
 
     const val SIGNUP = "$UN_AUTH_API/signup"
     const val LOGIN = "$UN_AUTH_API/login"
@@ -31,7 +32,6 @@ object Endpoint {
 
     //ADMIN
     const val LIST_USERS = "$API_URL$ADMIN/users"
-    const val ORGANIZATIONS = "$API_URL$ADMIN/organizations"
 
 
     object Params {

@@ -1,9 +1,10 @@
-package com.mutualmobile.praxisspringboot.services.user
+package com.mutualmobile.praxisspringboot.services.user.impl
 
 import com.mutualmobile.praxisspringboot.entities.user.DBRole
-import com.mutualmobile.praxisspringboot.entities.user.DBPraxisUser
+import com.mutualmobile.praxisspringboot.entities.user.DBHarvestUser
 import com.mutualmobile.praxisspringboot.repositories.RoleRepository
 import com.mutualmobile.praxisspringboot.repositories.UserRepository
+import com.mutualmobile.praxisspringboot.services.user.PraxisUserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -25,7 +26,7 @@ class PraxisUserServiceImpl : PraxisUserService {
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(username: String?): UserDetails? {
         try {
-            val praxisUser: DBPraxisUser? = userRepository.findByEmailOrId(username!!)
+            val praxisUser: DBHarvestUser? = userRepository.findByEmailOrId(username!!)
             praxisUser?.let {
                 val roles = roleRepository.findByUserId(praxisUser.id)
                 val authorities = getAuthorities(roles)

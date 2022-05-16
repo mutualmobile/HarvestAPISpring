@@ -2,7 +2,7 @@ package com.mutualmobile.praxisspringboot.services.user
 
 import com.mutualmobile.praxisspringboot.data.user.DevicePlatform
 import com.mutualmobile.praxisspringboot.data.user.RequestUser
-import com.mutualmobile.praxisspringboot.entities.user.DBPraxisUser
+import com.mutualmobile.praxisspringboot.entities.user.DBHarvestUser
 import com.mutualmobile.praxisspringboot.data.models.auth.AuthResponse
 import com.mutualmobile.praxisspringboot.data.models.auth.TokenRefreshRequest
 import org.springframework.http.ResponseEntity
@@ -17,10 +17,10 @@ interface UserAuthService {
         platform: DevicePlatform?
     ): ResponseEntity<AuthResponse>
 
-    fun usernameExists(username: String?): DBPraxisUser?
+    fun usernameExists(username: String?): DBHarvestUser?
     fun getLoggedInUser(token: String): ResponseEntity<RequestUser>
     fun refreshToken(tokenRefreshRequest: TokenRefreshRequest): ResponseEntity<AuthResponse>
     fun fcmToken(pushToken: String?, platform: DevicePlatform?, httpServletRequest: HttpServletRequest): AuthResponse
-    fun getDbUser(token: String): DBPraxisUser?
-    fun requestUser(token: String): RequestUser
+    fun getDbUser(token: String): DBHarvestUser?
+    fun requestUser(token: String): RequestUser?
 }

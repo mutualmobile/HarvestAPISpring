@@ -109,16 +109,11 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             //notifications
             .antMatchers(HttpMethod.GET, "${Endpoint.NOTIFICATIONS}/**", "${Endpoint.NOTIFICATION_COUNT}/**")
             .hasAnyAuthority(UserRole.HARVEST_SUPER_ADMIN.role, UserRole.ORG_ADMIN.role, UserRole.ORG_USER.role)
-
-            // superadmin can see organizations
-            .antMatchers(HttpMethod.GET, "${ORGANIZATIONS}/**")
-            .hasAnyAuthority(UserRole.HARVEST_SUPER_ADMIN.role)
-            // get time entries enabled for any user role but
+            // get time entries enabled for any user role
             .antMatchers(HttpMethod.GET, "${TIME_ENTRIES}/**")
             .hasAnyAuthority(
                 UserRole.HARVEST_SUPER_ADMIN.role, UserRole.ORG_ADMIN.role, UserRole.ORG_USER.role
             )
-
             .antMatchers(
                 HttpMethod.GET,
                 "${Endpoint.LIST_USERS}/**",

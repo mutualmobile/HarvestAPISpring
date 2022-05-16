@@ -26,5 +26,6 @@ data class RequestUser(
     var profilePic: String? = null,
     var modifiedTime: String? = null,
     @Enumerated(EnumType.STRING)
-    var platform: DevicePlatform? = null
+    var platform: DevicePlatform? = null,
+    var orgId: String
 )
