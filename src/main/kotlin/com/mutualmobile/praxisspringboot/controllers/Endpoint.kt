@@ -22,8 +22,12 @@ object Endpoint {
     const val NOTIFICATIONS = "$API_URL/notifications"
     const val NOTIFICATION_COUNT = "$API_URL/notificationCount"
 
+    //Org main user
+    const val ORGANIZATION = "$API_URL$ADMIN/organization"
+
     //ADMIN
     const val LIST_USERS = "$API_URL$ADMIN/users"
+    const val ORGANIZATIONS = "$API_URL$ADMIN/organizations"
 
 
     object Params {
