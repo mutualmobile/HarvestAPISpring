@@ -7,7 +7,13 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "project_user_entry")
-data class DBOrgProjectUserEntry(val userId: UUID, val notes: String, val time: Double, val workType: UUID) :
+data class DBOrgProjectUserEntry(
+    val orgId: UUID,
+    val userId: UUID,
+    val notes: String,
+    val time: Double,
+    val workType: UUID,
+) :
     BaseEntity()
 
 
