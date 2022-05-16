@@ -1,4 +1,4 @@
-package com.mutualmobile.praxisspringboot.entities.orgs.users
+package com.mutualmobile.praxisspringboot.entities.orgs
 
 import com.mutualmobile.praxisspringboot.entities.BaseEntity
 import javax.persistence.Entity
