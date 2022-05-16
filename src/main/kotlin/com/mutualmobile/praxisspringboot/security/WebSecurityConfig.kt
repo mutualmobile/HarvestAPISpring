@@ -1,6 +1,8 @@
 package com.mutualmobile.praxisspringboot.security
 
 import com.mutualmobile.praxisspringboot.controllers.Endpoint
+import com.mutualmobile.praxisspringboot.controllers.Endpoint.ORGANIZATIONS
+import com.mutualmobile.praxisspringboot.controllers.Endpoint.TIME_ENTRIES
 import com.mutualmobile.praxisspringboot.controllers.Endpoint.UN_AUTH_API
 import com.mutualmobile.praxisspringboot.security.jwt.JwtRequestFilter
 import com.mutualmobile.praxisspringboot.services.user.PraxisUserService
@@ -96,22 +98,32 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 HttpMethod.GET,
                 "${Endpoint.USER}/**",
             )
-            .hasAnyAuthority(UserRole.ADMIN.role, UserRole.SERVICE_PROVIDER.role, UserRole.CUSTOMER.role)
+            .hasAnyAuthority(UserRole.HARVEST_SUPER_ADMIN.role, UserRole.ORG_ADMIN.role, UserRole.ORG_USER.role)
             .antMatchers(
                 HttpMethod.POST,
                 "${Endpoint.LOGOUT}/**",
                 "${Endpoint.USER}/**",
                 "${Endpoint.CHANGE_PASSWORD}/**"
             )
-            .hasAnyAuthority(UserRole.ADMIN.role, UserRole.SERVICE_PROVIDER.role, UserRole.CUSTOMER.role)
+            .hasAnyAuthority(UserRole.HARVEST_SUPER_ADMIN.role, UserRole.ORG_ADMIN.role, UserRole.ORG_USER.role)
             //notifications
             .antMatchers(HttpMethod.GET, "${Endpoint.NOTIFICATIONS}/**", "${Endpoint.NOTIFICATION_COUNT}/**")
-            .hasAnyAuthority(UserRole.ADMIN.role, UserRole.SERVICE_PROVIDER.role, UserRole.CUSTOMER.role)
+            .hasAnyAuthority(UserRole.HARVEST_SUPER_ADMIN.role, UserRole.ORG_ADMIN.role, UserRole.ORG_USER.role)
+
+            // superadmin can see organizations
+            .antMatchers(HttpMethod.GET, "${ORGANIZATIONS}/**")
+            .hasAnyAuthority(UserRole.HARVEST_SUPER_ADMIN.role)
+            // get time entries enabled for any user role but
+            .antMatchers(HttpMethod.GET, "${TIME_ENTRIES}/**")
+            .hasAnyAuthority(
+                UserRole.HARVEST_SUPER_ADMIN.role, UserRole.ORG_ADMIN.role, UserRole.ORG_USER.role
+            )
+
             .antMatchers(
                 HttpMethod.GET,
                 "${Endpoint.LIST_USERS}/**",
             )
-            .hasAnyAuthority(UserRole.ADMIN.role)
+            .hasAnyAuthority(UserRole.HARVEST_SUPER_ADMIN.role)
             .anyRequest()
             .authenticated()
 
