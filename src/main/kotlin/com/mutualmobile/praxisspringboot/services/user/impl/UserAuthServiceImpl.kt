@@ -141,8 +141,8 @@ class UserAuthServiceImpl : UserAuthService {
         requestUser: RequestUser,
         resetPassword: Boolean
     ): ResponseEntity<AuthResponse> {
-        requestUser.harvestOrganization?.let {
-            return tryWhenNewOrganization(it, requestUser, resetPassword)
+        requestUser.harvestOrganization?.let { harvestOrganization ->
+            return tryWhenNewOrganization(harvestOrganization, requestUser, resetPassword)
         } ?: run {
             return ResponseEntity.ok(
                 AuthResponse(
@@ -154,22 +154,23 @@ class UserAuthServiceImpl : UserAuthService {
     }
 
     private fun tryWhenNewOrganization(
-        it: HarvestOrganization,
+        harvestOrganization: HarvestOrganization,
         requestUser: RequestUser,
         resetPassword: Boolean
     ): ResponseEntity<AuthResponse> {
-        return try {
-            val org = organizationService.createOrganization(it)
-            requestUser.role = UserRole.ORG_ADMIN.role // this makes sure the user is an org-admin
-            requestUser.orgId = org.id
-            registerWhenOrganizationAvailable(requestUser, resetPassword)
-        } catch (ex: java.lang.Exception) {
-            ResponseEntity.ok(
+        val existingOrg = orgRepository.findByName(harvestOrganization.name)
+        existingOrg?.let {
+            return ResponseEntity.ok(
                 AuthResponse(
                     null,
                     "The organization already exists, please search and select."
                 )
             )
+        } ?: run {
+            val org = organizationService.createOrganization(harvestOrganization)
+            requestUser.role = UserRole.ORG_ADMIN.role // this makes sure the user is an org-admin
+            requestUser.orgId = org.id
+            return registerWhenOrganizationAvailable(requestUser, resetPassword)
         }
     }
 
