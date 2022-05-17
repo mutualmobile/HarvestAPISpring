@@ -6,6 +6,7 @@ import com.mutualmobile.praxisspringboot.controllers.Endpoint
 import com.mutualmobile.praxisspringboot.controllers.authuser.getToken
 import com.mutualmobile.praxisspringboot.data.models.auth.AuthResponse
 import com.mutualmobile.praxisspringboot.data.models.auth.TokenRefreshRequest
+import com.mutualmobile.praxisspringboot.data.models.orgs.HarvestOrganization
 import com.mutualmobile.praxisspringboot.data.user.DevicePlatform
 import com.mutualmobile.praxisspringboot.data.user.RequestUser
 import com.mutualmobile.praxisspringboot.entities.user.DBFcmToken
@@ -17,6 +18,8 @@ import com.mutualmobile.praxisspringboot.repositories.FCMRepository
 import com.mutualmobile.praxisspringboot.repositories.RoleRepository
 import com.mutualmobile.praxisspringboot.repositories.UserRepository
 import com.mutualmobile.praxisspringboot.repositories.orgs.OrgRepository
+import com.mutualmobile.praxisspringboot.security.UserRole
+import com.mutualmobile.praxisspringboot.services.orgs.OrganizationService
 import com.mutualmobile.praxisspringboot.services.user.PraxisUserService
 import com.mutualmobile.praxisspringboot.services.user.UserAuthService
 import com.mutualmobile.praxisspringboot.util.Utility
@@ -31,6 +34,7 @@ import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.sql.SQLIntegrityConstraintViolationException
 import javax.servlet.http.HttpServletRequest
 
 @Service
@@ -43,6 +47,9 @@ class UserAuthServiceImpl : UserAuthService {
 
     @Autowired
     lateinit var orgRepository: OrgRepository
+
+    @Autowired
+    lateinit var organizationService: OrganizationService
 
     @Autowired
     lateinit var refreshTokenService: RefreshTokenService
@@ -109,7 +116,7 @@ class UserAuthServiceImpl : UserAuthService {
             ifUserExists(requestUser)?.let {
                 return it
             }
-            return registerWithOrganization(requestUser, resetPassword)
+            return registerUserInternal(requestUser, resetPassword)
         } ?: run {
             return ResponseEntity(
                 AuthResponse(message = "Request body is null!"),
@@ -118,25 +125,55 @@ class UserAuthServiceImpl : UserAuthService {
         }
     }
 
-    private fun registerWithOrganization(
+    private fun registerUserInternal(
         requestUser: RequestUser,
         resetPassword: Boolean
     ): ResponseEntity<AuthResponse> {
-        val organization = orgRepository.findByIdOrNull(requestUser.orgId)
+        val organization = orgRepository.findByIdOrNull(requestUser.orgId ?: "-1")
         organization?.let {
-            return registerOrganizationAvailable(requestUser, resetPassword)
+            return registerWhenOrganizationAvailable(requestUser, resetPassword)
         } ?: run {
-            // TODO create organization here by using RequestUser.OrganizationModel
+            return registerWhenNewOrganization(requestUser, resetPassword)
+        }
+    }
+
+    private fun registerWhenNewOrganization(
+        requestUser: RequestUser,
+        resetPassword: Boolean
+    ): ResponseEntity<AuthResponse> {
+        requestUser.harvestOrganization?.let {
+            return tryWhenNewOrganization(it, requestUser, resetPassword)
+        } ?: run {
             return ResponseEntity.ok(
                 AuthResponse(
                     null,
-                    "Your organization is not yet registered with us, please signup as organization first!"
+                    "Please share the organization details in the request"
                 )
             )
         }
     }
 
-    private fun registerOrganizationAvailable(
+    private fun tryWhenNewOrganization(
+        it: HarvestOrganization,
+        requestUser: RequestUser,
+        resetPassword: Boolean
+    ): ResponseEntity<AuthResponse> {
+        return try {
+            val org = organizationService.createOrganization(it)
+            requestUser.role = UserRole.ORG_ADMIN.role // this makes sure the user is an org-admin
+            requestUser.orgId = org.id
+            registerWhenOrganizationAvailable(requestUser, resetPassword)
+        } catch (ex: java.lang.Exception) {
+            ResponseEntity.ok(
+                AuthResponse(
+                    null,
+                    "The organization already exists, please search and select."
+                )
+            )
+        }
+    }
+
+    private fun registerWhenOrganizationAvailable(
         requestUser: RequestUser,
         resetPassword: Boolean
     ): ResponseEntity<AuthResponse> {
