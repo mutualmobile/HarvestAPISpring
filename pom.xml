@@ -222,14 +222,6 @@
                 <version>3.0.4</version>
                 <configuration>
                     <appName>${heroku.appName}</appName>
-                    <includeTarget>false</includeTarget>
-                    <includes>
-                        <include>${project.build.directory}/${project.build.finalName}.jar</include>
-                    </includes>
-                    <jdkVersion>${java.version}</jdkVersion>
-                    <processTypes>
-                        <web>java $JAVA_OPTS -jar ${project.build.directory}/${project.build.finalName}.jar</web>
-                    </processTypes>
                 </configuration>
             </plugin>
         </plugins>
