@@ -11,7 +11,13 @@ jobs:
 
       - name: Checkout source code
         uses: actions/checkout@v1
-
+      - name: Create firebase-adminsdk.json from secrets
+        id: write_firebase-adminsdk.json
+        uses: timheuer/base64-to-file@v1.1
+        with:
+          fileName: 'firebase-adminsdk.json'
+          fileDir: '/Users/runner/work/HarvestCloneAPI/HarvestCloneAPI/src/main/resources/'
+          encodedString: ${{ secrets.FIREBASEADMINSDK }}
       - name: Generate deployment package
         run: ./mvnw clean && ./mvnw install
       - name: Declare some variables
