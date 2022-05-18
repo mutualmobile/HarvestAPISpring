@@ -11,8 +11,8 @@ jobs:
 
       - name: Checkout source code
         uses: actions/checkout@v1
-      - name: Create firebase-adminsdk.json from secrets
-        id: write_firebase-adminsdk.json
+      - name: Create firebase-adminsdkjson from secrets
+        id: write_firebase-adminsdkjson
         uses: timheuer/base64-to-file@v1.1
         with:
           fileName: 'firebase-adminsdk.json'
