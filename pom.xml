@@ -12,8 +12,8 @@
     <artifactId>PraxisSpringBoot</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>PraxisSpringBoot</name>
-    <packaging>jar</packaging>
     <description>PraxisSpringBoot</description>
+    <packaging>war</packaging>
     <properties>
         <java.version>11</java.version>
         <kotlin.version>1.6.10</kotlin.version>
@@ -223,14 +223,6 @@
                 <version>3.0.4</version>
                 <configuration>
                     <appName>harvestkmp</appName>
-                    <includeTarget>false</includeTarget>
-                    <includes>
-                        <include>${project.build.directory}/${project.build.finalName}.jar</include>
-                    </includes>
-                    <jdkVersion>${java.version}</jdkVersion>
-                    <processTypes>
-                        <web>java $JAVA_OPTS -jar ${project.build.directory}/${project.build.finalName}.jar</web>
-                    </processTypes>
                 </configuration>
             </plugin>
         </plugins>
