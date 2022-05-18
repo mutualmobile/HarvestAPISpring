@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.mutualmobile</groupId>
-    <artifactId>PraxisSpringBoot</artifactId>
+    <artifactId>mmharvestkmp</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>PraxisSpringBoot</name>
-    <description>PraxisSpringBoot</description>
+    <name>mmharvestkmp</name>
+    <description>mmharvestkmp</description>
     <packaging>war</packaging>
     <properties>
         <java.version>11</java.version>
@@ -182,14 +182,6 @@
                         <version>${kotlin.version}</version>
                     </dependency>
                 </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>com.heroku.sdk</groupId>
-                <artifactId>heroku-maven-plugin</artifactId>
-                <version>3.0.4</version>
-                <configuration>
-                    <appName>PraxisSpringBoot</appName>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
