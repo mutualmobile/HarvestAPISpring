@@ -2,10 +2,10 @@ package com.mutualmobile.praxisspringboot.util
 
 object Utility {
     fun getSiteURL(): String {
-        return "https://praxis-springboot.app"
+        return "https://harvestkmp.web.app"
     }
 
     fun getApiBaseURL(): String {
-        return "https://api.dev.praxis-springboot.com"
+        return "https://api.dev.harvestkmp.com"
     }
 }

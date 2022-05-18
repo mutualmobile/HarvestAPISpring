@@ -36,3 +36,4 @@ build/
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+src/main/resources/firebase-adminsdk.json
