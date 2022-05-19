@@ -8,4 +8,5 @@ interface OrganizationService {
     fun listOrganizations(offset: Int, limit: Int, search: String?): Page<DBOrganization>
     fun createOrganization(harvestOrganization: HarvestOrganization) : HarvestOrganization
     fun updateOrganization(harvestOrganization: HarvestOrganization): HarvestOrganization?
+    fun findOrganization(identifier: String): HarvestOrganization?
 }

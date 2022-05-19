@@ -37,6 +37,10 @@ class OrganizationServiceImpl : OrganizationService {
         return null
     }
 
+    override fun findOrganization(identifier: String): HarvestOrganization? {
+        return orgRepository.findByIdentifier(identifier)?.toHarvestOrg()
+    }
+
     override fun listOrganizations(
         offset: Int,
         limit: Int,
@@ -56,9 +60,9 @@ class OrganizationServiceImpl : OrganizationService {
 }
 
 private fun HarvestOrganization.toDBHarvestOrganization(): DBOrganization {
-    return DBOrganization(this.name, this.website, this.imgUrl)
+    return DBOrganization(this.name, this.website, this.imgUrl, this.identifier)
 }
 
 fun DBOrganization.toHarvestOrg(): HarvestOrganization {
-    return HarvestOrganization(this.name, this.website, this.imgUrl, this.id)
+    return HarvestOrganization(this.name, this.website, this.imgUrl, this.id, this.identifier)
 }

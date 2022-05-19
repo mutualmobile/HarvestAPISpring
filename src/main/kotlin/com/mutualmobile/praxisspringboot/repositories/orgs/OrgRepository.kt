@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface OrgRepository : JpaRepository<DBOrganization, String> {
     fun findAllByName(name: String?, page: Pageable): Page<DBOrganization>
     fun findByName(name: String): DBOrganization?
-
+    fun findByIdentifier(identifier: String): DBOrganization?
 }
