@@ -4,6 +4,7 @@ import com.mutualmobile.praxisspringboot.controllers.Endpoint
 import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.orgs.HarvestOrganization
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -27,4 +28,9 @@ interface OrganizationApi {
     fun findOrganization(
         @RequestParam(value = Endpoint.Params.ORG_IDENTIFIER, required = true) identifier: String
     ): ResponseEntity<ApiResponse<HarvestOrganization>>
+
+    @DeleteMapping(Endpoint.UN_AUTH_ORGANISATION)
+    fun deleteOrganisation(
+        @RequestParam(value = Endpoint.Params.ID, required = true) organisationId: String
+    ): ResponseEntity<ApiResponse<Boolean>>
 }

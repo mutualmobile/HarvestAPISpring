@@ -19,7 +19,7 @@ class OrganizationApiImpl : OrganizationApi {
 
     override fun getOrganizations(offset: Int?, limit: Int?, search: String?): List<HarvestOrganization> {
         val page = organizationService.listOrganizations(offset ?: 0, limit ?: 10, search)
-        return page.toList().map { it.toHarvestOrg() }
+        return page.toList().filterNot { it.deleted }.map { it.toHarvestOrg() }
     }
 
     override fun createOrganization(harvestOrganization: HarvestOrganization): ApiResponse<HarvestOrganization> {
@@ -38,5 +38,11 @@ class OrganizationApiImpl : OrganizationApi {
             return ResponseEntity.ok(ApiResponse(message = "Organization already exists", data = nnResult))
         }
         return ResponseEntity.noContent().build()
+    }
+
+    override fun deleteOrganisation(organisationId: String): ResponseEntity<ApiResponse<Boolean>> {
+        val result = organizationService.deleteOrganization(organisationId)
+        return if (result.data != null) ResponseEntity.ok(result.copy(data = null))
+        else ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(result)
     }
 }
