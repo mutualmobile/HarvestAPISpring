@@ -19,7 +19,7 @@ class OrganizationApiImpl : OrganizationApi {
 
     override fun getOrganizations(offset: Int?, limit: Int?, search: String?): List<HarvestOrganization> {
         val page = organizationService.listOrganizations(offset ?: 0, limit ?: 10, search)
-        return page.toList().filterNot { it.deleted }.map { it.toHarvestOrg() }
+        return page.toList().map { it.toHarvestOrg() }
     }
 
     override fun createOrganization(harvestOrganization: HarvestOrganization): ApiResponse<HarvestOrganization> {
