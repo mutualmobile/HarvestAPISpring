@@ -24,6 +24,8 @@ object Endpoint {
     const val NOTIFICATIONS = "$API_URL/notifications"
     const val NOTIFICATION_COUNT = "$API_URL/notificationCount"
 
+    const val DELETE_ORGANIZATION = "$ADMIN/deleteOrganization"
+
     //Org main user // TODO write security for these endpoints.
     const val ORGANIZATION = "$API_URL/organization"
     const val ORG_USERS = "$API_URL/organization/users"
@@ -58,7 +60,7 @@ object Endpoint {
         const val SORT_BY = "sortBy"
         const val SORT_ORDER = "sortOrder"
 
-        const val NOTIFICATION_ID = "notificationId";
+        const val NOTIFICATION_ID = "notificationId"
 
         const val ORG_IDENTIFIER = "identifier"
     }
