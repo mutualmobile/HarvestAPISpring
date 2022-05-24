@@ -14,5 +14,5 @@ interface OrganizationService {
      * @param [organizationId] ID of the organisation we need to delete
      * @return [ApiResponse] - Whether the organisation was deleted successfully
      * */
-    fun deleteOrganization(organizationId: String): ApiResponse<Boolean>
+    fun deleteOrganization(organizationId: String): Boolean
 }
