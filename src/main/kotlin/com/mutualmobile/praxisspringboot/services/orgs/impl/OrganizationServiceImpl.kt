@@ -1,5 +1,6 @@
 package com.mutualmobile.praxisspringboot.services.orgs.impl
 
+import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.orgs.HarvestOrganization
 import com.mutualmobile.praxisspringboot.entities.orgs.DBOrganization
 import com.mutualmobile.praxisspringboot.repositories.orgs.OrgRepository
@@ -37,6 +38,24 @@ class OrganizationServiceImpl : OrganizationService {
         return null
     }
 
+    override fun findOrganization(identifier: String): HarvestOrganization? {
+        val currentOrg = orgRepository.findByIdentifier(identifier)
+        return if (currentOrg?.deleted == false) currentOrg.toHarvestOrg() else null
+    }
+
+    override fun deleteOrganization(organizationId: String): ApiResponse<Boolean> {
+        val currentOrg = orgRepository.findById(organizationId).orElse(null)
+        currentOrg?.let { nnCurrentOrg ->
+            return if (nnCurrentOrg.deleted) {
+                ApiResponse(message = "Organisation already deleted", data = false)
+            } else {
+                orgRepository.save(nnCurrentOrg.apply { deleted = true })
+                ApiResponse(message = "Organisation deleted successfully", data = true)
+            }
+        }
+        return ApiResponse(message = "No organisation(s) found with the given id", data = null)
+    }
+
     override fun listOrganizations(
         offset: Int,
         limit: Int,
@@ -56,9 +75,9 @@ class OrganizationServiceImpl : OrganizationService {
 }
 
 private fun HarvestOrganization.toDBHarvestOrganization(): DBOrganization {
-    return DBOrganization(this.name, this.website, this.imgUrl)
+    return DBOrganization(this.name, this.website, this.imgUrl, this.identifier)
 }
 
 fun DBOrganization.toHarvestOrg(): HarvestOrganization {
-    return HarvestOrganization(this.name, this.website, this.imgUrl, this.id)
+    return HarvestOrganization(this.name, this.website, this.imgUrl, this.id, this.identifier)
 }
