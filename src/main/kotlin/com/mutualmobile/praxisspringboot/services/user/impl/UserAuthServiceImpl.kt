@@ -158,7 +158,7 @@ class UserAuthServiceImpl : UserAuthService {
         requestUser: RequestUser,
         resetPassword: Boolean
     ): ResponseEntity<AuthResponse> {
-        val existingOrg = orgRepository.findByName(harvestOrganization.name)
+        val existingOrg = orgRepository.findByNameAndDeleted(harvestOrganization.name, deleted = false)
         existingOrg?.let {
             return ResponseEntity.ok(
                 AuthResponse(

@@ -35,14 +35,17 @@ class OrganizationApiImpl : OrganizationApi {
     override fun findOrganization(identifier: String): ResponseEntity<ApiResponse<HarvestOrganization>> {
         val result = organizationService.findOrganization(identifier)
         result?.let { nnResult ->
-            return ResponseEntity.ok(ApiResponse(message = "Organization already exists", data = nnResult))
+            return ResponseEntity.ok(ApiResponse(message = null, data = nnResult))
         }
         return ResponseEntity.noContent().build()
     }
 
     override fun deleteOrganisation(organisationId: String): ResponseEntity<ApiResponse<Boolean>> {
         val result = organizationService.deleteOrganization(organisationId)
-        return if (result.data != null) ResponseEntity.ok(result.copy(data = null))
-        else ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(result)
+        return if (result) {
+            ResponseEntity.ok(ApiResponse(message = "Org Deleted"))
+        } else {
+            ResponseEntity(ApiResponse(message = "Could not delete!", data = false), HttpStatus.NO_CONTENT)
+        }
     }
 }

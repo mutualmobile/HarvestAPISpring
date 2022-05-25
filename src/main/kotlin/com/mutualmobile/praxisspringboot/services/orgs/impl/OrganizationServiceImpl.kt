@@ -39,21 +39,17 @@ class OrganizationServiceImpl : OrganizationService {
     }
 
     override fun findOrganization(identifier: String): HarvestOrganization? {
-        val currentOrg = orgRepository.findByIdentifier(identifier)
-        return if (currentOrg?.deleted == false) currentOrg.toHarvestOrg() else null
+        val currentOrg = orgRepository.findByIdentifierAndDeleted(identifier, false)
+        return currentOrg?.toHarvestOrg()
     }
 
-    override fun deleteOrganization(organizationId: String): ApiResponse<Boolean> {
+    override fun deleteOrganization(organizationId: String): Boolean {
         val currentOrg = orgRepository.findById(organizationId).orElse(null)
         currentOrg?.let { nnCurrentOrg ->
-            return if (nnCurrentOrg.deleted) {
-                ApiResponse(message = "Organisation already deleted", data = false)
-            } else {
-                orgRepository.save(nnCurrentOrg.apply { deleted = true })
-                ApiResponse(message = "Organisation deleted successfully", data = true)
-            }
+            orgRepository.save(nnCurrentOrg.apply { deleted = true })
+            return true
         }
-        return ApiResponse(message = "No organisation(s) found with the given id", data = null)
+        return false
     }
 
     override fun listOrganizations(
@@ -61,14 +57,17 @@ class OrganizationServiceImpl : OrganizationService {
         limit: Int,
         search: String?,
     ): Page<DBOrganization> {
+        // TODO fetch the role of the user from jwt token
+        // TODO based on role return deleted and not deleted records
         val order: Sort.Order = Sort.Order(Sort.Direction.ASC, "name")
         search?.let {
-            return orgRepository.findAllByName(
+            return orgRepository.findAllByNameAndDeleted(
                 search,
+                false,
                 PageRequest.of(offset, limit, Sort.by(order))
             )
         } ?: run {
-            return orgRepository.findAll(PageRequest.of(offset, limit, Sort.by(order)))
+            return orgRepository.findAllByDeleted(deleted = false, PageRequest.of(offset, limit, Sort.by(order)))
         }
 
     }
