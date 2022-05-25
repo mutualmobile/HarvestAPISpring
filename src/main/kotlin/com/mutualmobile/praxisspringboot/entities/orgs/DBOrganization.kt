@@ -7,5 +7,5 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "organizations")
-data class DBOrganization(@Column(unique = true) val name: String, val website: String, val imgUrl: String) :
+data class DBOrganization(@Column(unique = true) val name: String, val website: String, val imgUrl: String, val identifier: String) :
     BaseEntity()

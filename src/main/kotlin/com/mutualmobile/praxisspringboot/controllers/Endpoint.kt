@@ -6,6 +6,7 @@ object Endpoint {
     private const val ADMIN = "/admin"
     const val UN_AUTH_API = "$API_URL/public"
     const val ORGANIZATIONS = "$UN_AUTH_API/organizations"
+    const val UN_AUTH_ORGANISATION = "$UN_AUTH_API/organization"
 
     const val SIGNUP = "$UN_AUTH_API/signup"
     const val LOGIN = "$UN_AUTH_API/login"
@@ -22,6 +23,8 @@ object Endpoint {
 
     const val NOTIFICATIONS = "$API_URL/notifications"
     const val NOTIFICATION_COUNT = "$API_URL/notificationCount"
+
+    const val DELETE_ORGANIZATION = "$ADMIN/deleteOrganization"
 
     //Org main user // TODO write security for these endpoints.
     const val ORGANIZATION = "$API_URL/organization"
@@ -57,7 +60,8 @@ object Endpoint {
         const val SORT_BY = "sortBy"
         const val SORT_ORDER = "sortOrder"
 
-        const val NOTIFICATION_ID = "notificationId";
+        const val NOTIFICATION_ID = "notificationId"
 
+        const val ORG_IDENTIFIER = "identifier"
     }
 }

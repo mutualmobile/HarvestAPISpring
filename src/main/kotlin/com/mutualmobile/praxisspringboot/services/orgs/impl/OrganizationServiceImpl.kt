@@ -1,5 +1,6 @@
 package com.mutualmobile.praxisspringboot.services.orgs.impl
 
+import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.orgs.HarvestOrganization
 import com.mutualmobile.praxisspringboot.entities.orgs.DBOrganization
 import com.mutualmobile.praxisspringboot.repositories.orgs.OrgRepository
@@ -37,28 +38,45 @@ class OrganizationServiceImpl : OrganizationService {
         return null
     }
 
+    override fun findOrganization(identifier: String): HarvestOrganization? {
+        val currentOrg = orgRepository.findByIdentifierAndDeleted(identifier, false)
+        return currentOrg?.toHarvestOrg()
+    }
+
+    override fun deleteOrganization(organizationId: String): Boolean {
+        val currentOrg = orgRepository.findById(organizationId).orElse(null)
+        currentOrg?.let { nnCurrentOrg ->
+            orgRepository.save(nnCurrentOrg.apply { deleted = true })
+            return true
+        }
+        return false
+    }
+
     override fun listOrganizations(
         offset: Int,
         limit: Int,
         search: String?,
     ): Page<DBOrganization> {
+        // TODO fetch the role of the user from jwt token
+        // TODO based on role return deleted and not deleted records
         val order: Sort.Order = Sort.Order(Sort.Direction.ASC, "name")
         search?.let {
-            return orgRepository.findAllByName(
+            return orgRepository.findAllByNameAndDeleted(
                 search,
+                false,
                 PageRequest.of(offset, limit, Sort.by(order))
             )
         } ?: run {
-            return orgRepository.findAll(PageRequest.of(offset, limit, Sort.by(order)))
+            return orgRepository.findAllByDeleted(deleted = false, PageRequest.of(offset, limit, Sort.by(order)))
         }
 
     }
 }
 
 private fun HarvestOrganization.toDBHarvestOrganization(): DBOrganization {
-    return DBOrganization(this.name, this.website, this.imgUrl)
+    return DBOrganization(this.name, this.website, this.imgUrl, this.identifier)
 }
 
 fun DBOrganization.toHarvestOrg(): HarvestOrganization {
-    return HarvestOrganization(this.name, this.website, this.imgUrl, this.id)
+    return HarvestOrganization(this.name, this.website, this.imgUrl, this.id, this.identifier)
 }
