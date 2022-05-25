@@ -7,12 +7,15 @@ import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.auth.RequestUserChangePassword
 import com.mutualmobile.praxisspringboot.data.user.RequestUser
 import com.mutualmobile.praxisspringboot.entities.user.DBHarvestUser
-import com.mutualmobile.praxisspringboot.security.jwt.JwtTokenUtil
 import com.mutualmobile.praxisspringboot.repositories.RoleRepository
 import com.mutualmobile.praxisspringboot.repositories.UserRepository
+import com.mutualmobile.praxisspringboot.security.jwt.JwtTokenUtil
 import com.mutualmobile.praxisspringboot.services.user.PraxisUserService
 import com.mutualmobile.praxisspringboot.services.user.UserDataService
 import com.mutualmobile.praxisspringboot.util.Utility
+import java.net.URL
+import java.util.Date
+import javax.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -20,9 +23,6 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.servlet.view.RedirectView
-import java.net.URL
-import java.util.*
-import javax.servlet.http.HttpServletRequest
 
 
 @Service
@@ -106,6 +106,27 @@ class UserDataServiceImpl : UserDataService {
         }
         return RedirectView().apply {
             url = Utility.getSiteURL() + "/${response}"
+        }
+    }
+
+    override fun getUsersByTypeAndOrgName(
+        userType: String,
+        orgName: String?,
+        isUserDeleted: Boolean,
+        offset: Int?,
+        limit: Int?
+    ): ApiResponse<List<RequestUser>> {
+        return try {
+            val result = userRepository.findByTypeAndOrgName(
+                type = userType,
+                orgName = orgName,
+                isUserDeleted = isUserDeleted,
+                offsetSafe = offset,
+                limitSafe = limit
+            ).map { it.toRequestUser() }
+            ApiResponse(data = result)
+        } catch (e: Exception) {
+            ApiResponse(message = e.localizedMessage ?: "No users found!")
         }
     }
 

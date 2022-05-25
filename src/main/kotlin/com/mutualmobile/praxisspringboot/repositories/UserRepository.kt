@@ -15,12 +15,24 @@ interface UserRepository : JpaRepository<DBHarvestUser, String> {
     fun findByEmailOrId(@Param("email") email: String?): DBHarvestUser?
 
     @Query(
+        "SELECT * FROM praxisuser ksuser JOIN organizations ksorg ON ksuser.org_id = ksorg.id JOIN role ksrole ON ksuser.id = ksrole.user_id WHERE ksorg.name = :orgName AND ksrole.name = :type AND ksuser.deleted = :isUserDeleted OFFSET :offset LIMIT :limit",
+        nativeQuery = true
+    )
+    fun findByTypeAndOrgName(
+        @Param("type") type: String,
+        @Param("orgName") orgName: String?,
+        @Param("isUserDeleted") isUserDeleted: Boolean,
+        @Param("offset") offsetSafe: Int?,
+        @Param("limit") limitSafe: Int?,
+        ): List<DBHarvestUser>
+
+    @Query(
         "select * FROM praxisuser ksuser JOIN role ksrole on ksuser.id = ksrole.user_id where ksrole.name like concat('%', :type, '%') offset :offset limit :limit",
         nativeQuery = true
     )
     fun findUsersOfType(
         @Param("offset") offsetSafe: Int,
         @Param("limit") limitSafe: Int,
-        @Param("type") type:String
+        @Param("type") type: String
     ): List<DBHarvestUser>
 }

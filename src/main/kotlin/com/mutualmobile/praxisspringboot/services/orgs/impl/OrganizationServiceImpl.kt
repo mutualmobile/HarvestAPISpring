@@ -1,6 +1,5 @@
 package com.mutualmobile.praxisspringboot.services.orgs.impl
 
-import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.orgs.HarvestOrganization
 import com.mutualmobile.praxisspringboot.entities.orgs.DBOrganization
 import com.mutualmobile.praxisspringboot.repositories.orgs.OrgRepository
@@ -8,9 +7,9 @@ import com.mutualmobile.praxisspringboot.services.orgs.OrganizationService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
-import org.springframework.stereotype.Service
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Service
 
 @Service
 class OrganizationServiceImpl : OrganizationService {
@@ -41,6 +40,11 @@ class OrganizationServiceImpl : OrganizationService {
     override fun findOrganization(identifier: String): HarvestOrganization? {
         val currentOrg = orgRepository.findByIdentifierAndDeleted(identifier, false)
         return currentOrg?.toHarvestOrg()
+    }
+
+    override fun findOrganizationById(orgId: String): HarvestOrganization? {
+        val result = orgRepository.findByIdOrNull(orgId)
+        return result?.toHarvestOrg()
     }
 
     override fun deleteOrganization(organizationId: String): Boolean {
