@@ -26,8 +26,9 @@ object Endpoint {
 
     //Org main user // TODO write security for these endpoints.
     const val ORGANIZATION = "$API_URL/organization"
-    const val ORG_USERS = "$API_URL/organization/users"
-    const val ORG_USER = "$API_URL/organization/user"
+    const val ORG_USERS = "$ORGANIZATION/users"
+    const val ORG_USER = "$ORGANIZATION/user"
+    const val ORG_PROJECT = "$ORGANIZATION/project"
     const val TIME_ENTRIES = "$API_URL/organization-project-user/times"
     const val TIME_ENTRY = "$API_URL/organization-project-user/time"
 
@@ -58,7 +59,7 @@ object Endpoint {
         const val SORT_BY = "sortBy"
         const val SORT_ORDER = "sortOrder"
 
-        const val NOTIFICATION_ID = "notificationId";
+        const val NOTIFICATION_ID = "notificationId"
 
         const val ORG_IDENTIFIER = "identifier"
     }
