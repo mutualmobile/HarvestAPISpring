@@ -87,7 +87,7 @@ class UserDataServiceImpl : UserDataService {
             val token = jwtTokenUtil.generateJWTToken(email)
             dbHarvestUser.resetPasswordToken = token
             userRepository.save(dbHarvestUser)
-            val resetPasswordLink = Utility.getSiteURL() + "/resetPassword?token=" + token;
+            val resetPasswordLink = Utility.getSiteURL() + "/resetPassword?token=" + token
             sendEmail(email, resetPasswordLink, it.name())
             return ResponseEntity.ok(ApiResponse(message = "We have sent a reset password link to your email. Please check."))
         } ?: run {
@@ -111,7 +111,7 @@ class UserDataServiceImpl : UserDataService {
 
     override fun getUsersByTypeAndOrgName(
         userType: String,
-        orgName: String?,
+        orgIdentifier: String?,
         isUserDeleted: Boolean,
         offset: Int?,
         limit: Int?
@@ -119,7 +119,7 @@ class UserDataServiceImpl : UserDataService {
         return try {
             val result = userRepository.findByTypeAndOrgName(
                 type = userType,
-                orgName = orgName,
+                orgIdentifier = orgIdentifier,
                 isUserDeleted = isUserDeleted,
                 offsetSafe = offset,
                 limitSafe = limit

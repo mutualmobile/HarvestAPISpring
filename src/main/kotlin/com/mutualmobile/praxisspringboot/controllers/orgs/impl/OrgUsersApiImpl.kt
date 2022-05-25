@@ -38,20 +38,20 @@ class OrgUsersApiImpl : OrgUsersApi {
 
     override fun getOrgUsersByType(
         userType: String,
-        orgName: String?,
+        orgIdentifier: String?,
         isUserDeleted: Boolean,
         offset: Int?,
         limit: Int?,
         httpServletRequest: HttpServletRequest
     ): ApiResponse<List<RequestUser>> {
-        val organisationName = orgName ?: try {
+        val organisationIdentifier = orgIdentifier ?: try {
             val token = httpServletRequest.getToken() ?: throw Exception()
             val user = userAuthService.getDbUser(token) ?: throw Exception()
-            organizationService.findOrganizationById(user.orgId)?.name ?: throw Exception()
+            organizationService.findOrganizationById(user.orgId)?.identifier ?: throw Exception()
         } catch (e: Exception) { null }
         return userDataService.getUsersByTypeAndOrgName(
             userType = userType,
-            orgName = organisationName,
+            orgIdentifier = organisationIdentifier,
             isUserDeleted = isUserDeleted,
             offset = offset,
             limit = limit

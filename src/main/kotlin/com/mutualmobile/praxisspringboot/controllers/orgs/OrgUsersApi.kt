@@ -24,7 +24,7 @@ interface OrgUsersApi {
     @GetMapping(Endpoint.ORG_USERS)
     fun getOrgUsersByType(
         @RequestParam userType: String,
-        @RequestParam orgName: String? = null,
+        @RequestParam orgIdentifier: String? = null,
         @RequestParam isUserDeleted: Boolean = false,
         @RequestParam(value = Endpoint.Params.OFFSET, required = false) offset: Int?,
         @RequestParam(value = Endpoint.Params.LIMIT, required = false) limit: Int?,
