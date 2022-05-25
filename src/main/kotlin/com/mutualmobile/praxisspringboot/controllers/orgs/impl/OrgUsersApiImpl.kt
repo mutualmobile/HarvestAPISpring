@@ -10,6 +10,7 @@ import com.mutualmobile.praxisspringboot.services.user.UserAuthService
 import com.mutualmobile.praxisspringboot.services.user.UserDataService
 import javax.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -40,8 +41,8 @@ class OrgUsersApiImpl : OrgUsersApi {
         userType: String,
         orgIdentifier: String?,
         isUserDeleted: Boolean,
-        offset: Int?,
-        limit: Int?,
+        offset: Int,
+        limit: Int,
         httpServletRequest: HttpServletRequest
     ): ApiResponse<List<RequestUser>> {
         val organisationIdentifier = orgIdentifier ?: try {
@@ -49,12 +50,11 @@ class OrgUsersApiImpl : OrgUsersApi {
             val user = userAuthService.getDbUser(token) ?: throw Exception()
             organizationService.findOrganizationById(user.orgId)?.identifier ?: throw Exception()
         } catch (e: Exception) { null }
-        return userDataService.getUsersByTypeAndOrgName(
+        return userDataService.getUsersByTypeAndOrgIdentifier(
             userType = userType,
             orgIdentifier = organisationIdentifier,
             isUserDeleted = isUserDeleted,
-            offset = offset,
-            limit = limit
+            pageable = PageRequest.of(offset, limit)
         )
     }
 }

@@ -6,6 +6,7 @@ import com.mutualmobile.praxisspringboot.data.user.RequestUser
 import com.mutualmobile.praxisspringboot.entities.user.DBHarvestUser
 import java.net.URL
 import javax.servlet.http.HttpServletRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.servlet.view.RedirectView
 
@@ -19,5 +20,5 @@ interface UserDataService {
     fun saveUserProfilePic(url: URL?, id: String)
     fun getUserByRole(userId: String, role: String): DBHarvestUser?
     fun verifyEmail(token: String?): RedirectView
-    fun getUsersByTypeAndOrgName(userType: String, orgIdentifier: String?, isUserDeleted: Boolean, offset: Int?, limit: Int?): ApiResponse<List<RequestUser>>
+    fun getUsersByTypeAndOrgIdentifier(userType: String, orgIdentifier: String?, isUserDeleted: Boolean, pageable: Pageable): ApiResponse<List<RequestUser>>
 }

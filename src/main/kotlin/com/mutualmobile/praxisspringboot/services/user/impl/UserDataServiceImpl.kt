@@ -17,6 +17,7 @@ import java.net.URL
 import java.util.Date
 import javax.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.userdetails.UserDetails
@@ -109,24 +110,22 @@ class UserDataServiceImpl : UserDataService {
         }
     }
 
-    override fun getUsersByTypeAndOrgName(
+    override fun getUsersByTypeAndOrgIdentifier(
         userType: String,
         orgIdentifier: String?,
         isUserDeleted: Boolean,
-        offset: Int?,
-        limit: Int?
+        pageable: Pageable,
     ): ApiResponse<List<RequestUser>> {
         return try {
-            val result = userRepository.findByTypeAndOrgName(
+            val result = userRepository.findByTypeAndOrgIdentifier(
                 type = userType,
                 orgIdentifier = orgIdentifier,
                 isUserDeleted = isUserDeleted,
-                offsetSafe = offset,
-                limitSafe = limit
-            ).map { it.toRequestUser() }
+                pageable = pageable
+            ).map { it.toRequestUser() }.content
             ApiResponse(data = result)
         } catch (e: Exception) {
-            ApiResponse(message = e.localizedMessage ?: "No users found!")
+            ApiResponse(message = e.localizedMessage ?: "Unexpected error occurred!")
         }
     }
 
