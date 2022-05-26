@@ -120,7 +120,9 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             )
             .antMatchers(HttpMethod.GET,"${ORGANIZATION}/**")
             .hasAnyAuthority(
-                UserRole.ORG_ADMIN.role
+                UserRole.ORG_ADMIN.role,
+                UserRole.ORG_USER.role,
+                UserRole.HARVEST_SUPER_ADMIN.role,
             )
             .antMatchers(HttpMethod.PUT,"${ORGANIZATION}/**")
             .hasAnyAuthority(
