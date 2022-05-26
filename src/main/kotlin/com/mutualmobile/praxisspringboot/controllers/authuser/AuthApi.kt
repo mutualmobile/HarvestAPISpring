@@ -21,7 +21,7 @@ interface AuthApi {
     fun registerUser(@RequestBody body: RequestUser?): ResponseEntity<ApiResponse<RequestUser>>
 
     @PostMapping(Endpoint.LOGOUT)
-    fun logoutUser(@RequestBody logOutRequest: LogOutRequest, httpServletRequest: HttpServletRequest): ResponseEntity<*>?
+    fun logoutUser(@RequestBody(required = false) logOutRequest: LogOutRequest, httpServletRequest: HttpServletRequest): ResponseEntity<*>?
 
     @PostMapping(Endpoint.REFRESH_TOKEN)
     fun refreshToken(@RequestBody tokenRefreshRequest: TokenRefreshRequest): ResponseEntity<AuthResponse>
