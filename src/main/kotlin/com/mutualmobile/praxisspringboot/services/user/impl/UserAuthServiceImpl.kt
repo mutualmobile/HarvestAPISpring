@@ -4,11 +4,13 @@ import com.mutualmobile.praxisspringboot.communication.email.PraxisNotification
 import com.mutualmobile.praxisspringboot.communication.email.PraxisNotificationService
 import com.mutualmobile.praxisspringboot.controllers.Endpoint
 import com.mutualmobile.praxisspringboot.controllers.authuser.getToken
+import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.auth.AuthResponse
 import com.mutualmobile.praxisspringboot.data.models.auth.TokenRefreshRequest
 import com.mutualmobile.praxisspringboot.data.models.orgs.HarvestOrganization
 import com.mutualmobile.praxisspringboot.data.user.DevicePlatform
 import com.mutualmobile.praxisspringboot.data.user.RequestUser
+import com.mutualmobile.praxisspringboot.entities.orgs.DBOrganization
 import com.mutualmobile.praxisspringboot.entities.user.DBFcmToken
 import com.mutualmobile.praxisspringboot.entities.user.DBRole
 import com.mutualmobile.praxisspringboot.entities.user.DBHarvestUser
@@ -20,6 +22,7 @@ import com.mutualmobile.praxisspringboot.repositories.UserRepository
 import com.mutualmobile.praxisspringboot.repositories.orgs.OrgRepository
 import com.mutualmobile.praxisspringboot.security.UserRole
 import com.mutualmobile.praxisspringboot.services.orgs.OrganizationService
+import com.mutualmobile.praxisspringboot.services.orgs.impl.toHarvestOrg
 import com.mutualmobile.praxisspringboot.services.user.PraxisUserService
 import com.mutualmobile.praxisspringboot.services.user.UserAuthService
 import com.mutualmobile.praxisspringboot.util.Utility
@@ -34,7 +37,6 @@ import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import java.sql.SQLIntegrityConstraintViolationException
 import javax.servlet.http.HttpServletRequest
 
 @Service
@@ -111,7 +113,10 @@ class UserAuthServiceImpl : UserAuthService {
         )
     }
 
-    override fun registerUser(requestUser: RequestUser?, resetPassword: Boolean): ResponseEntity<AuthResponse> {
+    override fun registerUser(
+        requestUser: RequestUser?,
+        resetPassword: Boolean
+    ): ResponseEntity<ApiResponse<RequestUser>> {
         requestUser?.let {
             ifUserExists(requestUser)?.let {
                 return it
@@ -119,7 +124,7 @@ class UserAuthServiceImpl : UserAuthService {
             return registerUserInternal(requestUser, resetPassword)
         } ?: run {
             return ResponseEntity(
-                AuthResponse(message = "Request body is null!"),
+                ApiResponse(message = "Request body is null!"),
                 HttpStatus.BAD_REQUEST
             )
         }
@@ -128,10 +133,10 @@ class UserAuthServiceImpl : UserAuthService {
     private fun registerUserInternal(
         requestUser: RequestUser,
         resetPassword: Boolean
-    ): ResponseEntity<AuthResponse> {
+    ): ResponseEntity<ApiResponse<RequestUser>> {
         val organization = orgRepository.findByIdOrNull(requestUser.orgId ?: "-1")
         organization?.let {
-            return registerWhenOrganizationAvailable(requestUser, resetPassword)
+            return registerWhenOrganizationAvailable(requestUser, resetPassword, it.toHarvestOrg())
         } ?: run {
             return registerWhenNewOrganization(requestUser, resetPassword)
         }
@@ -140,14 +145,14 @@ class UserAuthServiceImpl : UserAuthService {
     private fun registerWhenNewOrganization(
         requestUser: RequestUser,
         resetPassword: Boolean
-    ): ResponseEntity<AuthResponse> {
+    ): ResponseEntity<ApiResponse<RequestUser>> {
         requestUser.harvestOrganization?.let { harvestOrganization ->
             return tryWhenNewOrganization(harvestOrganization, requestUser, resetPassword)
         } ?: run {
             return ResponseEntity.ok(
-                AuthResponse(
-                    null,
-                    "Please share the organization details in the request"
+                ApiResponse(
+                    data = null,
+                    message = "Please share the organization details in the request"
                 )
             )
         }
@@ -157,33 +162,34 @@ class UserAuthServiceImpl : UserAuthService {
         harvestOrganization: HarvestOrganization,
         requestUser: RequestUser,
         resetPassword: Boolean
-    ): ResponseEntity<AuthResponse> {
+    ): ResponseEntity<ApiResponse<RequestUser>> {
         val existingOrg = orgRepository.findByIdentifierAndDeleted(harvestOrganization.identifier!!, deleted = false)
         existingOrg?.let {
             return ResponseEntity.ok(
-                AuthResponse(
-                    null,
-                    "The organization already exists, please search and select."
+                ApiResponse(
+                    data = null,
+                    message = "The organization already exists, please search and select."
                 )
             )
         } ?: run {
             val org = organizationService.createOrganization(harvestOrganization)
             requestUser.role = UserRole.ORG_ADMIN.role // this makes sure the user is an org-admin
             requestUser.orgId = org.id
-            return registerWhenOrganizationAvailable(requestUser, resetPassword)
+            return registerWhenOrganizationAvailable(requestUser, resetPassword, org)
         }
     }
 
     private fun registerWhenOrganizationAvailable(
         requestUser: RequestUser,
-        resetPassword: Boolean
-    ): ResponseEntity<AuthResponse> {
+        resetPassword: Boolean,
+        dbOrganization: HarvestOrganization
+    ): ResponseEntity<ApiResponse<RequestUser>> {
         val dbUser = saveUser(requestUser, resetPassword)
         defineRoleAndType(requestUser, dbUser)
         return ResponseEntity.ok(
-            AuthResponse(
-                null,
-                "Registration Successful! Please verify your email before getting started!"
+            ApiResponse(
+                data = dbUser.toRequestUser().copy(harvestOrganization = dbOrganization, orgId = dbOrganization.id),
+                message = "Registration Successful! Please verify your email before getting started!"
             )
         )
     }
@@ -193,10 +199,10 @@ class UserAuthServiceImpl : UserAuthService {
         sendVerifyEmail(dbUser.email, verification, dbUser.name())
     }
 
-    private fun ifUserExists(requestUser: RequestUser): ResponseEntity<AuthResponse>? {
+    private fun ifUserExists(requestUser: RequestUser): ResponseEntity<ApiResponse<RequestUser>>? {
         if (usernameExists(requestUser.email) != null) {
             return ResponseEntity(
-                AuthResponse(message = "An account with this email address already exist"),
+                ApiResponse(message = "An account with this email address already exist"),
                 HttpStatus.BAD_REQUEST
             )
         }
