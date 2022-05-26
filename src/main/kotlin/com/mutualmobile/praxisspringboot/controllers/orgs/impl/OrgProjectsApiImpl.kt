@@ -70,4 +70,13 @@ class OrgProjectsApiImpl : OrgProjectsApi {
             ResponseEntity.status(HttpStatus.NO_CONTENT).body(ApiResponse(message = "Couldn't update project!"))
         }
     }
+
+    override fun deleteProject(projectId: String): ResponseEntity<ApiResponse<Unit>> {
+        val isProjectDeleted = organizationProjectService.deleteProject(projectId)
+        return if (isProjectDeleted) {
+            ResponseEntity.ok(ApiResponse(message = "Deleted project successfully!"))
+        } else {
+            ResponseEntity.status(HttpStatus.NO_CONTENT).body(ApiResponse(message = "Couldn't delete project!"))
+        }
+    }
 }

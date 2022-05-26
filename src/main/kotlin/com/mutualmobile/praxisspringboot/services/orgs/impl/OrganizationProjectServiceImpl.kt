@@ -42,6 +42,16 @@ class OrganizationProjectServiceImpl : OrganizationProjectService {
             false
         }
     }
+
+    override fun deleteProject(projectId: String): Boolean {
+        val doesCurrentProjectExist = orgProjectsRepository.existsById(projectId)
+        return if (!doesCurrentProjectExist) {
+            false
+        } else {
+            orgProjectsRepository.deleteById(projectId)
+            true
+        }
+    }
 }
 
 private fun OrganizationProject.toDbOrgProject() = DBOrgProjects(

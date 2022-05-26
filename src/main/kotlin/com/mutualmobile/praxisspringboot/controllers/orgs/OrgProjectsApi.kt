@@ -5,6 +5,7 @@ import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.orgs.OrganizationProject
 import javax.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -28,4 +29,7 @@ interface OrgProjectsApi {
 
     @PutMapping(Endpoint.ORG_PROJECT)
     fun updateProject(@RequestBody organizationProject: OrganizationProject): ResponseEntity<ApiResponse<Unit>>
+
+    @DeleteMapping(Endpoint.ORG_PROJECT)
+    fun deleteProject(@RequestParam projectId: String): ResponseEntity<ApiResponse<Unit>>
 }
