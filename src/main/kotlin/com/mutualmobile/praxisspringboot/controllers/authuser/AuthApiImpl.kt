@@ -68,12 +68,12 @@ class AuthApiImpl : AuthApi {
 
     @Transactional
     override fun logoutUser(
-        @RequestBody logOutRequest: LogOutRequest,
+        @RequestBody logOutRequest: LogOutRequest?,
         httpServletRequest: HttpServletRequest
     ): ResponseEntity<*>? {
         val userId = jwtTokenUtil.getUserIdFromToken(httpServletRequest.getToken())
         userId?.let { refreshTokenService.deleteByUserId(userId) }
-        logOutRequest.pushToken?.let { fcmRepository.deleteByToken(it) }
+        logOutRequest?.pushToken?.let { fcmRepository.deleteByToken(it) }
         return ResponseEntity(ApiResponse<String>("Log out successful!"), HttpStatus.OK)
     }
 
