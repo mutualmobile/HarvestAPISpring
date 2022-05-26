@@ -7,22 +7,23 @@ import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.auth.RequestUserChangePassword
 import com.mutualmobile.praxisspringboot.data.user.RequestUser
 import com.mutualmobile.praxisspringboot.entities.user.DBHarvestUser
-import com.mutualmobile.praxisspringboot.security.jwt.JwtTokenUtil
 import com.mutualmobile.praxisspringboot.repositories.RoleRepository
 import com.mutualmobile.praxisspringboot.repositories.UserRepository
+import com.mutualmobile.praxisspringboot.security.jwt.JwtTokenUtil
 import com.mutualmobile.praxisspringboot.services.user.PraxisUserService
 import com.mutualmobile.praxisspringboot.services.user.UserDataService
 import com.mutualmobile.praxisspringboot.util.Utility
+import java.net.URL
+import java.util.Date
+import javax.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.servlet.view.RedirectView
-import java.net.URL
-import java.util.*
-import javax.servlet.http.HttpServletRequest
 
 
 @Service
@@ -87,7 +88,7 @@ class UserDataServiceImpl : UserDataService {
             val token = jwtTokenUtil.generateJWTToken(email)
             dbHarvestUser.resetPasswordToken = token
             userRepository.save(dbHarvestUser)
-            val resetPasswordLink = Utility.getSiteURL() + "/resetPassword?token=" + token;
+            val resetPasswordLink = Utility.getSiteURL() + "/resetPassword?token=" + token
             sendEmail(email, resetPasswordLink, it.name())
             return ResponseEntity.ok(ApiResponse(message = "We have sent a reset password link to your email. Please check."))
         } ?: run {
@@ -106,6 +107,25 @@ class UserDataServiceImpl : UserDataService {
         }
         return RedirectView().apply {
             url = Utility.getSiteURL() + "/${response}"
+        }
+    }
+
+    override fun getUsersByTypeAndOrgId(
+        userType: String,
+        orgId: String?,
+        isUserDeleted: Boolean,
+        pageable: Pageable,
+    ): ApiResponse<List<RequestUser>> {
+        return try {
+            val result = userRepository.findByTypeAndOrgId(
+                type = userType,
+                orgId = orgId,
+                isUserDeleted = isUserDeleted,
+                pageable = pageable
+            ).map { it.toRequestUser() }.content
+            ApiResponse(data = result)
+        } catch (e: Exception) {
+            ApiResponse(message = e.localizedMessage ?: "Unexpected error occurred!")
         }
     }
 
