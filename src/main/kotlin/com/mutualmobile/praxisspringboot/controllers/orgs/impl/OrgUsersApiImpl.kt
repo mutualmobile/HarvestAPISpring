@@ -45,14 +45,20 @@ class OrgUsersApiImpl : OrgUsersApi {
         limit: Int,
         httpServletRequest: HttpServletRequest
     ): ApiResponse<List<RequestUser>> {
-        val organisationIdentifier = orgIdentifier ?: try {
+        val organizationId: String = orgIdentifier?.let { nnOrgIdentifier ->
+            organizationService.findOrganization(nnOrgIdentifier)?.id
+                ?: return ApiResponse(message = "No organization found!")
+        } ?: try {
             val token = httpServletRequest.getToken() ?: throw Exception()
             val user = userAuthService.getDbUser(token) ?: throw Exception()
-            organizationService.findOrganizationById(user.orgId)?.identifier ?: throw Exception()
-        } catch (e: Exception) { null }
-        return userDataService.getUsersByTypeAndOrgIdentifier(
+
+            user.orgId
+        } catch (e: Exception) {
+            return ApiResponse(message = "No organization found!")
+        }
+        return userDataService.getUsersByTypeAndOrgId(
             userType = userType,
-            orgIdentifier = organisationIdentifier,
+            orgId = organizationId,
             isUserDeleted = isUserDeleted,
             pageable = PageRequest.of(offset, limit)
         )

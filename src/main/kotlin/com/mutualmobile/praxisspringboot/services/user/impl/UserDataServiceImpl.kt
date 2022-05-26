@@ -110,16 +110,16 @@ class UserDataServiceImpl : UserDataService {
         }
     }
 
-    override fun getUsersByTypeAndOrgIdentifier(
+    override fun getUsersByTypeAndOrgId(
         userType: String,
-        orgIdentifier: String?,
+        orgId: String?,
         isUserDeleted: Boolean,
         pageable: Pageable,
     ): ApiResponse<List<RequestUser>> {
         return try {
-            val result = userRepository.findByTypeAndOrgIdentifier(
+            val result = userRepository.findByTypeAndOrgId(
                 type = userType,
-                orgIdentifier = orgIdentifier,
+                orgId = orgId,
                 isUserDeleted = isUserDeleted,
                 pageable = pageable
             ).map { it.toRequestUser() }.content

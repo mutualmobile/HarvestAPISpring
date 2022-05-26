@@ -17,12 +17,12 @@ interface UserRepository : JpaRepository<DBHarvestUser, String> {
     fun findByEmailOrId(@Param("email") email: String?): DBHarvestUser?
 
     @Query(
-        "SELECT * FROM praxisuser ksuser JOIN organizations ksorg ON ksuser.org_id = ksorg.id JOIN role ksrole ON ksuser.id = ksrole.user_id WHERE ksorg.identifier = :orgIdentifier AND ksrole.name = :type AND ksuser.deleted = :isUserDeleted",
+        "SELECT * FROM praxisuser ksuser JOIN role ksrole ON ksuser.id = ksrole.user_id WHERE ksuser.org_id = :orgId AND ksrole.name = :type AND ksuser.deleted = :isUserDeleted",
         nativeQuery = true
     )
-    fun findByTypeAndOrgIdentifier(
+    fun findByTypeAndOrgId(
         type: String,
-        orgIdentifier: String?,
+        orgId: String?,
         isUserDeleted: Boolean,
         pageable: Pageable
         ): Page<DBHarvestUser>
