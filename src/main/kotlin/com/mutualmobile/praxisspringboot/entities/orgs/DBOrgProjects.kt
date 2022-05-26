@@ -12,5 +12,6 @@ class DBOrgProjects(
     val client: String,
     val startDate: Date?,
     val endDate: Date?,
-    val isIndefinite: Boolean
+    val isIndefinite: Boolean,
+    val organizationId: String? = null,
 ) : BaseEntity()
