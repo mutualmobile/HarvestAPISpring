@@ -4,6 +4,7 @@ import com.mutualmobile.praxisspringboot.controllers.Endpoint
 import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.orgs.OrganizationProject
 import javax.servlet.http.HttpServletRequest
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -25,6 +26,6 @@ interface OrgProjectsApi {
         request: HttpServletRequest
     ): ApiResponse<OrganizationProject>
 
-    @PutMapping
-    fun updateProject(organizationProject: OrganizationProject): ApiResponse<OrganizationProject>
+    @PutMapping(Endpoint.ORG_PROJECT)
+    fun updateProject(@RequestBody organizationProject: OrganizationProject): ResponseEntity<ApiResponse<Unit>>
 }

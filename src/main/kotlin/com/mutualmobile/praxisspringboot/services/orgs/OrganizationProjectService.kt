@@ -5,4 +5,5 @@ import com.mutualmobile.praxisspringboot.data.models.orgs.OrganizationProject
 interface OrganizationProjectService {
     fun createProject(organizationProject: OrganizationProject): OrganizationProject
     fun getAllProjects(organizationId: String, offset: Int, limit: Int): List<OrganizationProject>
+    fun updateProject(organizationProject: OrganizationProject): Boolean
 }
