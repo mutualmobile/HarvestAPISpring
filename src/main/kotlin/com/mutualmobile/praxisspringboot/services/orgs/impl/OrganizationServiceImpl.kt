@@ -27,9 +27,8 @@ class OrganizationServiceImpl : OrganizationService {
         org?.let {
             val organization = orgRepository.save(
                 org.copy(
-                    name = harvestOrganization.name,
-                    website = harvestOrganization.website,
-                    imgUrl = harvestOrganization.imgUrl
+                    name = harvestOrganization.name!!,
+                    website = harvestOrganization.website!!,
                 )
             )
             return organization.toHarvestOrg()
@@ -78,9 +77,9 @@ class OrganizationServiceImpl : OrganizationService {
 }
 
 private fun HarvestOrganization.toDBHarvestOrganization(): DBOrganization {
-    return DBOrganization(this.name, this.website, this.imgUrl, this.identifier)
+    return DBOrganization(this.name!!, this.website!!, this.identifier!!)
 }
 
 fun DBOrganization.toHarvestOrg(): HarvestOrganization {
-    return HarvestOrganization(this.name, this.website, this.imgUrl, this.id, this.identifier)
+    return HarvestOrganization(this.name, this.website, this.id, this.identifier)
 }

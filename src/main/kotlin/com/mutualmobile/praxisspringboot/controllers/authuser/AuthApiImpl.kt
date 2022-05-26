@@ -62,12 +62,15 @@ class AuthApiImpl : AuthApi {
         return ResponseEntity(null, HttpStatus.BAD_REQUEST)
     }
 
-    override fun registerUser(body: RequestUser?): ResponseEntity<AuthResponse> {
+    override fun registerUser(body: RequestUser?): ResponseEntity<ApiResponse<RequestUser>> {
         return userAuthService.registerUser(body, false)
     }
 
     @Transactional
-    override fun logoutUser(@RequestBody logOutRequest: LogOutRequest, httpServletRequest: HttpServletRequest): ResponseEntity<*>? {
+    override fun logoutUser(
+        @RequestBody logOutRequest: LogOutRequest,
+        httpServletRequest: HttpServletRequest
+    ): ResponseEntity<*>? {
         val userId = jwtTokenUtil.getUserIdFromToken(httpServletRequest.getToken())
         userId?.let { refreshTokenService.deleteByUserId(userId) }
         logOutRequest.pushToken?.let { fcmRepository.deleteByToken(it) }
@@ -82,7 +85,7 @@ class AuthApiImpl : AuthApi {
         return if (body?.pushToken.isNullOrEmpty()) {
             ResponseEntity(null, HttpStatus.BAD_REQUEST)
         } else {
-            ResponseEntity(userAuthService.fcmToken(body?.pushToken,body?.platform, httpServletRequest), HttpStatus.OK)
+            ResponseEntity(userAuthService.fcmToken(body?.pushToken, body?.platform, httpServletRequest), HttpStatus.OK)
         }
     }
 
@@ -90,7 +93,7 @@ class AuthApiImpl : AuthApi {
         return if (body?.email.isNullOrEmpty() || body?.password.isNullOrEmpty()) {
             ResponseEntity(null, HttpStatus.BAD_REQUEST)
         } else {
-            userAuthService.loginUser(body?.email, body?.password, body?.pushToken,body?.platform)
+            userAuthService.loginUser(body?.email, body?.password, body?.pushToken, body?.platform)
         }
     }
 
