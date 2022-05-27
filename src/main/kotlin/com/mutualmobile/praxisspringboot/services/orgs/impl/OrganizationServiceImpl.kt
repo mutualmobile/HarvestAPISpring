@@ -37,7 +37,7 @@ class OrganizationServiceImpl : OrganizationService {
     }
 
     override fun findOrganization(identifier: String): HarvestOrganization? {
-        val currentOrg = orgRepository.findByIdentifierAndDeleted(identifier, false)
+        val currentOrg = orgRepository.findByIdentifierIgnoreCaseAndDeleted(identifier, false)
         return currentOrg?.toHarvestOrg()
     }
 
@@ -64,7 +64,7 @@ class OrganizationServiceImpl : OrganizationService {
         // TODO based on role return deleted and not deleted records
         val order: Sort.Order = Sort.Order(Sort.Direction.ASC, "name")
         search?.let {
-            return orgRepository.findAllByNameAndDeleted(
+            return orgRepository.findAllByNameIgnoreCaseAndDeleted(
                 search,
                 false,
                 PageRequest.of(offset, limit, Sort.by(order))

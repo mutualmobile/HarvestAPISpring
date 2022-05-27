@@ -6,8 +6,8 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface OrgRepository : JpaRepository<DBOrganization, String> {
-    fun findAllByNameAndDeleted(name: String?, deleted: Boolean, page: Pageable): Page<DBOrganization>
+    fun findAllByNameIgnoreCaseAndDeleted(name: String?, deleted: Boolean, page: Pageable): Page<DBOrganization>
     fun findAllByDeleted(deleted: Boolean, page: Pageable): Page<DBOrganization>
-    fun findByNameAndDeleted(name: String, deleted: Boolean): DBOrganization?
-    fun findByIdentifierAndDeleted(identifier: String, deleted: Boolean): DBOrganization?
+    fun findByNameIgnoreCaseAndDeleted(name: String, deleted: Boolean): DBOrganization?
+    fun findByIdentifierIgnoreCaseAndDeleted(identifier: String, deleted: Boolean): DBOrganization?
 }

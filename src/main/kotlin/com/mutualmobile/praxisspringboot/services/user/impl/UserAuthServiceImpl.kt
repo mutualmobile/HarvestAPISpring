@@ -10,7 +10,6 @@ import com.mutualmobile.praxisspringboot.data.models.auth.TokenRefreshRequest
 import com.mutualmobile.praxisspringboot.data.models.orgs.HarvestOrganization
 import com.mutualmobile.praxisspringboot.data.user.DevicePlatform
 import com.mutualmobile.praxisspringboot.data.user.RequestUser
-import com.mutualmobile.praxisspringboot.entities.orgs.DBOrganization
 import com.mutualmobile.praxisspringboot.entities.user.DBFcmToken
 import com.mutualmobile.praxisspringboot.entities.user.DBRole
 import com.mutualmobile.praxisspringboot.entities.user.DBHarvestUser
@@ -163,7 +162,7 @@ class UserAuthServiceImpl : UserAuthService {
         requestUser: RequestUser,
         resetPassword: Boolean
     ): ResponseEntity<ApiResponse<RequestUser>> {
-        val existingOrg = orgRepository.findByIdentifierAndDeleted(harvestOrganization.identifier!!, deleted = false)
+        val existingOrg = orgRepository.findByIdentifierIgnoreCaseAndDeleted(harvestOrganization.identifier!!, deleted = false)
         existingOrg?.let {
             return ResponseEntity.ok(
                 ApiResponse(
