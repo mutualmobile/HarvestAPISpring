@@ -26,7 +26,7 @@ class OrgProjectsApiImpl : OrgProjectsApi {
         offset: Int?,
         limit: Int?,
         httpServletRequest: HttpServletRequest
-    ): ApiResponse<List<OrganizationProject>> {
+    ): ApiResponse<Pair<Int, List<OrganizationProject>>> {
         val safeOffset = offset ?: 0
         val safeLimit = limit ?: 10
 

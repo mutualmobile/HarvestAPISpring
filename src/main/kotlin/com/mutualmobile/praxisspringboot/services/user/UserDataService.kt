@@ -20,5 +20,5 @@ interface UserDataService {
     fun saveUserProfilePic(url: URL?, id: String)
     fun getUserByRole(userId: String, role: String): DBHarvestUser?
     fun verifyEmail(token: String?): RedirectView
-    fun getUsersByTypeAndOrgId(userType: String, orgId: String?, isUserDeleted: Boolean, pageable: Pageable): ApiResponse<List<RequestUser>>
+    fun getUsersByTypeAndOrgId(userType: String, orgId: String?, isUserDeleted: Boolean, pageable: Pageable): ApiResponse<Pair<Int,List<RequestUser>>>
 }

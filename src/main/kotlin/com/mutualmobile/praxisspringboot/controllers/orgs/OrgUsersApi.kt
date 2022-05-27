@@ -29,5 +29,5 @@ interface OrgUsersApi {
         @RequestParam(value = Endpoint.Params.OFFSET, required = false) offset: Int = 0,
         @RequestParam(value = Endpoint.Params.LIMIT, required = false) limit: Int = 10,
         httpServletRequest: HttpServletRequest
-    ): ApiResponse<List<RequestUser>>
+    ): ApiResponse<Pair<Int, List<RequestUser>>>
 }

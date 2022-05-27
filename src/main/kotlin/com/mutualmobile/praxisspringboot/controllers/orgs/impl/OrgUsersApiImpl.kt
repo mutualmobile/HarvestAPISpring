@@ -44,7 +44,7 @@ class OrgUsersApiImpl : OrgUsersApi {
         offset: Int,
         limit: Int,
         httpServletRequest: HttpServletRequest
-    ): ApiResponse<List<RequestUser>> {
+    ): ApiResponse<Pair<Int,List<RequestUser>>> {
         val organizationId: String = orgIdentifier?.let { nnOrgIdentifier ->
             organizationService.findOrganization(nnOrgIdentifier)?.id
                 ?: return ApiResponse(message = "No organization found!")

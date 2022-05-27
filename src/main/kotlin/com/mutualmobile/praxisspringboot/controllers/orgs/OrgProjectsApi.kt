@@ -19,7 +19,7 @@ interface OrgProjectsApi {
         @RequestParam(value = Endpoint.Params.OFFSET, required = false) offset: Int?,
         @RequestParam(value = Endpoint.Params.LIMIT, required = false) limit: Int?,
         httpServletRequest: HttpServletRequest
-    ): ApiResponse<List<OrganizationProject>>
+    ): ApiResponse<Pair<Int, List<OrganizationProject>>>
 
     @PostMapping(Endpoint.ORG_PROJECT)
     fun createProject(
