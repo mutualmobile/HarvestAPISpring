@@ -114,17 +114,17 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .hasAnyAuthority(
                 UserRole.HARVEST_SUPER_ADMIN.role, UserRole.ORG_ADMIN.role, UserRole.ORG_USER.role
             )
-            .antMatchers(HttpMethod.POST,"${ORGANIZATION}/**")
+            .antMatchers(HttpMethod.POST, "${ORGANIZATION}/**")
             .hasAnyAuthority(
-                 UserRole.ORG_ADMIN.role
+                UserRole.ORG_ADMIN.role
             )
-            .antMatchers(HttpMethod.GET,"${ORGANIZATION}/**")
+            .antMatchers(HttpMethod.GET, "${ORGANIZATION}/**")
             .hasAnyAuthority(
                 UserRole.ORG_ADMIN.role,
                 UserRole.ORG_USER.role,
                 UserRole.HARVEST_SUPER_ADMIN.role,
             )
-            .antMatchers(HttpMethod.PUT,"${ORGANIZATION}/**")
+            .antMatchers(HttpMethod.PUT, "${ORGANIZATION}/**")
             .hasAnyAuthority(
                 UserRole.ORG_ADMIN.role
             )
@@ -133,6 +133,12 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 "${Endpoint.LIST_USERS}/**",
             )
             .hasAnyAuthority(UserRole.HARVEST_SUPER_ADMIN.role)
+            .antMatchers(HttpMethod.GET, "${Endpoint.ORG_PROJECT}/**")
+            .hasAnyAuthority(
+                UserRole.ORG_ADMIN.role,
+                UserRole.ORG_USER.role,
+                UserRole.HARVEST_SUPER_ADMIN.role,
+            )
             .anyRequest()
             .authenticated()
 
