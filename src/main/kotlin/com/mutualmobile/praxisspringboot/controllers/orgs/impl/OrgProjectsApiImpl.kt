@@ -8,6 +8,8 @@ import com.mutualmobile.praxisspringboot.services.orgs.OrganizationProjectServic
 import com.mutualmobile.praxisspringboot.services.user.UserAuthService
 import javax.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -60,7 +62,21 @@ class OrgProjectsApiImpl : OrgProjectsApi {
         return ApiResponse(message = "Couldn't create project!")
     }
 
-    override fun updateProject(organizationProject: OrganizationProject): ApiResponse<OrganizationProject> {
-        TODO("Not yet implemented")
+    override fun updateProject(organizationProject: OrganizationProject): ResponseEntity<ApiResponse<Unit>> {
+        val result = organizationProjectService.updateProject(organizationProject = organizationProject)
+        return if (result) {
+            ResponseEntity.ok(ApiResponse(message = "Updated project successfully!"))
+        } else {
+            ResponseEntity.status(HttpStatus.NO_CONTENT).body(ApiResponse(message = "Couldn't update project!"))
+        }
+    }
+
+    override fun deleteProject(projectId: String): ResponseEntity<ApiResponse<Unit>> {
+        val isProjectDeleted = organizationProjectService.deleteProject(projectId)
+        return if (isProjectDeleted) {
+            ResponseEntity.ok(ApiResponse(message = "Deleted project successfully!"))
+        } else {
+            ResponseEntity.status(HttpStatus.NO_CONTENT).body(ApiResponse(message = "Couldn't delete project!"))
+        }
     }
 }

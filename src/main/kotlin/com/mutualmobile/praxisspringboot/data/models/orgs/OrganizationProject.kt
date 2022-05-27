@@ -3,6 +3,7 @@ package com.mutualmobile.praxisspringboot.data.models.orgs
 import java.util.Date
 
 data class OrganizationProject(
+    val id: String? = null,
     val name: String,
     val client: String,
     val startDate: Date?,
