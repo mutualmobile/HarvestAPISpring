@@ -12,6 +12,7 @@ import org.springframework.web.servlet.view.RedirectView
 
 interface UserDataService {
     fun updateUser(body: RequestUser?, httpServletRequest: HttpServletRequest): ApiResponse<Void>?
+    fun updateUser(user: RequestUser): ApiResponse<Void>?
     fun changePassword(request: RequestUserChangePassword, user: DBHarvestUser?): ResponseEntity<ApiResponse<Void>?>
     fun postForgotPassword(email: String): ResponseEntity<ApiResponse<Void>?>
     fun postResetPassword(token: String?, newPassword: String?): ResponseEntity<ApiResponse<Void>?>
@@ -21,4 +22,5 @@ interface UserDataService {
     fun getUserByRole(userId: String, role: String): DBHarvestUser?
     fun verifyEmail(token: String?): RedirectView
     fun getUsersByTypeAndOrgId(userType: String, orgId: String?, isUserDeleted: Boolean, pageable: Pageable): ApiResponse<Pair<Int,List<RequestUser>>>
+    fun getUserById(userId: String): RequestUser?
 }

@@ -1,7 +1,9 @@
 package com.mutualmobile.praxisspringboot.entities.user
 
 import com.mutualmobile.praxisspringboot.entities.BaseEntity
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.Table
 
 @Entity
 @Table(name = "praxisuser")
@@ -15,6 +17,7 @@ data class DBHarvestUser(
     var resetPasswordToken: String? = null,
     var avatarUrl: String? = null,
     val orgId: String,
+    val projectIds: String? = null
 ) : BaseEntity() {
     fun name(): String {
         return "$firstName $lastName"

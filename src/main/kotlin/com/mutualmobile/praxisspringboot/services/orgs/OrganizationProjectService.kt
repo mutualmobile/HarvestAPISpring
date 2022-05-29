@@ -7,4 +7,5 @@ interface OrganizationProjectService {
     fun getAllProjects(organizationId: String, offset: Int, limit: Int): Pair<Int, List<OrganizationProject>>
     fun updateProject(organizationProject: OrganizationProject): Boolean
     fun deleteProject(projectId: String): Boolean
+    fun getProjectById(projectId: String): OrganizationProject?
 }

@@ -139,6 +139,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 UserRole.ORG_USER.role,
                 UserRole.HARVEST_SUPER_ADMIN.role,
             )
+            .antMatchers(HttpMethod.POST, "${Endpoint.ASSIGN_PROJECT}/**")
+            .hasAnyAuthority(UserRole.ORG_ADMIN.role)
             .anyRequest()
             .authenticated()
 

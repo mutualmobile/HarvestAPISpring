@@ -18,6 +18,7 @@ import java.util.Date
 import javax.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.userdetails.UserDetails
@@ -129,6 +130,10 @@ class UserDataServiceImpl : UserDataService {
         }
     }
 
+    override fun getUserById(userId: String): RequestUser? {
+        return userRepository.findByIdOrNull(userId)?.toRequestUser()
+    }
+
     override fun postResetPassword(token: String?, newPassword: String?): ResponseEntity<ApiResponse<Void>?> {
         if (token == null || newPassword == null) {
             return ResponseEntity.ok(ApiResponse("Failed to fetch params"))
@@ -207,6 +212,30 @@ class UserDataServiceImpl : UserDataService {
         return ApiResponse("User Not Found!")
     }
 
+    override fun updateUser(user: RequestUser): ApiResponse<Void>? {
+        val dbUser = userRepository.findByIdOrNull(user.id)
+        val doesUserExistInDb = dbUser != null
+        if (doesUserExistInDb) return try {
+            if (dbUser?.id == user.id) {
+                dbUser?.let {nnDbUser ->
+                    userRepository.save(nnDbUser.copy(
+                        email = user.email,
+                        firstName = user.firstName,
+                        lastName = user.lastName,
+                        orgId = user.orgId ?: "",
+                        projectIds = user.projectIds?.joinToString(separator = ",")
+                    ).apply {
+                        this.id = user.id ?: throw Exception("User ID unavailable!")
+                    })
+                }
+                return ApiResponse(message = "User updated successfully!")
+            } else throw Exception("Invalid user!")
+        } catch (e: Exception) {
+            ApiResponse(message = "Couldn't update user! Reason: ${e.localizedMessage}")
+        }
+        return null
+    }
+
 
 }
 
@@ -216,10 +245,11 @@ fun DBHarvestUser.toRequestUser(): RequestUser {
         firstName = this.firstName?.trim(),
         lastName = this.lastName?.trim(),
         email = this.email?.trim(),
-        null,
+        password = null,
         profilePic = this.avatarUrl,
         modifiedTime = this.lastModifiedTime?.toString(),
-        orgId = this.orgId
+        orgId = this.orgId,
+        projectIds = projectIds?.split(",")?.map { it.trim() } ?: emptyList()
     )
 }
 
@@ -230,6 +260,7 @@ fun RequestUser?.toDBUser(): DBHarvestUser {
         firstName = this?.firstName?.trim(),
         lastName = this?.lastName?.trim(),
         avatarUrl = this?.profilePic,
-        orgId = this?.orgId!!
+        orgId = this?.orgId!!,
+        projectIds = this.projectIds?.joinToString(separator = ",")
     )
 }
