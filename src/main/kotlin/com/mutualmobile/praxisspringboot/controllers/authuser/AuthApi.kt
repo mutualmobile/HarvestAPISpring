@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
 
 interface AuthApi {
     @PostMapping(Endpoint.FCM_TOKEN)
@@ -45,10 +44,4 @@ interface AuthApi {
 
     @PutMapping(Endpoint.USER)
     fun updateUser(@RequestBody body: RequestUser?, httpServletRequest: HttpServletRequest,): ResponseEntity<ApiResponse<Void>?>
-
-    @PostMapping(Endpoint.ASSIGN_PROJECT)
-    fun assignProjectToUser(
-        @RequestParam projectId: String,
-        @RequestParam userId: String
-    ): ResponseEntity<ApiResponse<Void>>
 }

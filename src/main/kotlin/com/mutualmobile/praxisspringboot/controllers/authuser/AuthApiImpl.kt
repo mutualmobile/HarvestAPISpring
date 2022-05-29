@@ -9,7 +9,6 @@ import com.mutualmobile.praxisspringboot.data.user.RequestUser
 import com.mutualmobile.praxisspringboot.repositories.FCMRepository
 import com.mutualmobile.praxisspringboot.security.RefreshTokenService
 import com.mutualmobile.praxisspringboot.security.jwt.JwtTokenUtil
-import com.mutualmobile.praxisspringboot.services.orgs.OrganizationProjectService
 import com.mutualmobile.praxisspringboot.services.user.UserAuthService
 import com.mutualmobile.praxisspringboot.services.user.UserDataService
 import javax.servlet.http.HttpServletRequest
@@ -39,9 +38,6 @@ class AuthApiImpl : AuthApi {
 
     @Autowired
     lateinit var jwtTokenUtil: JwtTokenUtil
-
-    @Autowired
-    lateinit var organizationProjectService: OrganizationProjectService
 
     override fun changePassword(
         httpServletRequest: HttpServletRequest,
@@ -111,38 +107,6 @@ class AuthApiImpl : AuthApi {
             return ResponseEntity(null, HttpStatus.BAD_REQUEST)
         }
     }
-
-    override fun assignProjectToUser(
-        projectId: String,
-        userId: String
-    ): ResponseEntity<ApiResponse<Void>> {
-        val doesProjectExist = organizationProjectService.getProjectById(projectId = projectId) != null
-        if (!doesProjectExist) return ResponseEntity.status(HttpStatus.NO_CONTENT)
-            .body(ApiResponse(message = "No project found with the given projectId!"))
-        userDataService.getUserById(userId = userId)?.let { nnUser ->
-            val updateResponse = userDataService.updateUser(
-                user = nnUser.apply {
-                    if (projectIds?.contains(projectId) == false) {
-                        projectIds = projectIds?.toMutableList()?.apply {
-                            add(projectId)
-                        }
-                    } else {
-                        return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                            .body(ApiResponse(message = "User is already working on the given project!"))
-                    }
-                }
-            )
-            updateResponse?.let { nnUpdateResponse ->
-                return ResponseEntity.ok(nnUpdateResponse)
-            } ?: run {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                    .body(ApiResponse(message = "Couldn't assign project to user!"))
-            }
-        }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
-            .body(ApiResponse(message = "No user found with the given ID!"))
-    }
-
 }
 
 fun HttpServletRequest.getToken(): String? {
