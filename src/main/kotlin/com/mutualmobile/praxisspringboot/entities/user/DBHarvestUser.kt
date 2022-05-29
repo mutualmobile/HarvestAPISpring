@@ -17,7 +17,6 @@ data class DBHarvestUser(
     var resetPasswordToken: String? = null,
     var avatarUrl: String? = null,
     val orgId: String,
-    val projectIds: String? = null
 ) : BaseEntity() {
     fun name(): String {
         return "$firstName $lastName"

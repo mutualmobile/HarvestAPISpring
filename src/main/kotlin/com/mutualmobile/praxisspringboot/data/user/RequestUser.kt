@@ -29,6 +29,4 @@ data class RequestUser(
     var platform: DevicePlatform? = null,
     var orgId: String? = null,
     var harvestOrganization: HarvestOrganization? = null,
-    @JsonProperty("projectIds")
-    var projectIds: List<String>? = null
 )
