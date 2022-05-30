@@ -37,6 +37,8 @@ object Endpoint {
     const val LIST_USERS = "$API_URL$ADMIN/users"
     const val ASSIGN_PROJECT = "$API_URL$ORG_ADMIN/assign-user-project"
 
+    const val LOG_WORK = "$USER/log-work"
+
     object Params {
         const val START_DATE = "startDate"
         const val END_DATE = "endDate"
