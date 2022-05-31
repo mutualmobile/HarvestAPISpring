@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class HarvestUserProject(
+data class HarvestUserProjectAssignment(
     @JsonProperty("id")
-    val id: String,
+    val id: String? = null,
     @JsonProperty("user_id")
     val userId: String,
     @JsonProperty("project_id")

@@ -8,4 +8,5 @@ interface OrganizationProjectService {
     fun updateProject(organizationProject: OrganizationProject): Boolean
     fun deleteProject(projectId: String): Boolean
     fun getProjectById(projectId: String): OrganizationProject?
+    fun checkIfProjectExists(projectId: String): Boolean
 }

@@ -134,6 +134,10 @@ class UserDataServiceImpl : UserDataService {
         return userRepository.findByIdOrNull(userId)?.toRequestUser()
     }
 
+    override fun checkIfUserExists(userId: String): Boolean {
+        return userRepository.existsById(userId)
+    }
+
     override fun postResetPassword(token: String?, newPassword: String?): ResponseEntity<ApiResponse<Void>?> {
         if (token == null || newPassword == null) {
             return ResponseEntity.ok(ApiResponse("Failed to fetch params"))
