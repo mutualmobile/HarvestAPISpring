@@ -38,7 +38,7 @@ class UserProjectServiceImpl : UserProjectService {
         }
     }
 
-    override fun findUserProject(
+    override fun findUserLinkedProject(
         projectId: String,
         userId: String
     ): HarvestUserProject? {
@@ -78,14 +78,19 @@ fun HarvestUserProject.toDbUserProject() = DBUserProject(
 
 fun DBUserWork.toHarvestUserWork() = HarvestUserWork(
     id = id,
-    userProjectId = userProjectId,
+    projectId = projectId,
+    userId = userId,
     workDate = workDate,
     workHours = workHours,
     note = note
 )
 
 fun HarvestUserWork.toDbUserWork() = DBUserWork(
-    userProjectId, workDate, workHours, note
+    projectId = projectId,
+    userId = userId,
+    workDate = workDate,
+    workHours = workHours,
+    note = note
 ).apply {
     this@toDbUserWork.id?.let { nnId ->
         this.id = nnId

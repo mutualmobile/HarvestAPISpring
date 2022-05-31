@@ -8,12 +8,12 @@ import javax.persistence.Table
 @Entity
 @Table(name = "user_work")
 class DBUserWork(
-    // Used to connect this table to the user_project table
-    val userProjectId: String,
+    val projectId: String,
+    val userId: String,
     /** Describes on what date was this work performed */
     val workDate: Date,
     /** Describes how many hours did the user work on this task */
-    val workHours: Int,
+    val workHours: Float,
     /** Additional notes from user */
     val note: String? = null
 ): BaseEntity()

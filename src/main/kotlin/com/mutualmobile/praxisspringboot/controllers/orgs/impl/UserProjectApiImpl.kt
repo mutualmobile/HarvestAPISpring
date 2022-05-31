@@ -7,8 +7,6 @@ import com.mutualmobile.praxisspringboot.data.user.HarvestUserProject
 import com.mutualmobile.praxisspringboot.services.orgs.OrganizationProjectService
 import com.mutualmobile.praxisspringboot.services.orgs.UserProjectService
 import com.mutualmobile.praxisspringboot.services.user.UserDataService
-import java.util.Date
-import javax.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -38,29 +36,14 @@ class UserProjectApiImpl : UserProjectApi {
         return userProjectService.assignProjectToUser(projectId = projectId, userId = userId)
     }
 
-    override fun logWorkTime(
-        projectId: String,
-        workDate: Date,
-        workHours: Int,
-        note: String?,
-        httpServletRequest: HttpServletRequest
-    ): ResponseEntity<ApiResponse<Unit>> {
+    override fun logWorkTime(userWork: HarvestUserWork): ResponseEntity<ApiResponse<Unit>> {
         return try {
-            val userId =
-                userDataService.getUser(httpServletRequest)?.id
-                    ?: throw Exception("No user found with the given ID!")
-
-            val userProjectId = userProjectService.findUserProject(projectId, userId)?.id
-                ?: throw Exception("Either no project exists with the given ID or the current user hasn't been assigned to it!")
-
-            val result = userProjectService.logWorkTime(
-                HarvestUserWork(
-                    userProjectId = userProjectId,
-                    workDate = workDate,
-                    workHours = workHours,
-                    note = note
+            userProjectService.findUserLinkedProject(projectId = userWork.projectId, userId = userWork.userId)
+                ?: throw Exception(
+                    "Either no project exists with the given ID or the current user hasn't been assigned to it!"
                 )
-            )
+
+            val result = userProjectService.logWorkTime(userWork)
 
             if (result.data == null) {
                 ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(result)

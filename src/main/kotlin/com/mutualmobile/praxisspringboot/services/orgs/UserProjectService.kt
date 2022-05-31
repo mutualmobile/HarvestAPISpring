@@ -11,7 +11,9 @@ interface UserProjectService {
         userId: String
     ): ResponseEntity<ApiResponse<HarvestUserProject>>
 
-    fun findUserProject(projectId: String, userId: String): HarvestUserProject?
+    /** Checks whether the given user has been assigned to the given project or not (by searching it in the
+     * user_project table). Returns [HarvestUserProject] if a project is found, else returns null. */
+    fun findUserLinkedProject(projectId: String, userId: String): HarvestUserProject?
 
     fun logWorkTime(harvestUserWork: HarvestUserWork): ApiResponse<Unit>
 }
