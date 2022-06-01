@@ -21,6 +21,7 @@ object Endpoint {
     const val REFRESH_TOKEN = "$API_URL/refreshToken"
 
     const val USER = "$API_URL/user"
+    private const val USER_PROJECT = "$USER/project"
 
     const val NOTIFICATIONS = "$API_URL/notifications"
     const val NOTIFICATION_COUNT = "$API_URL/notificationCount"
@@ -36,6 +37,8 @@ object Endpoint {
     //ADMIN
     const val LIST_USERS = "$API_URL$ADMIN/users"
     const val ASSIGN_PROJECT = "$API_URL$ORG_ADMIN/assign-user-project"
+
+    const val LOG_WORK = "$USER_PROJECT/log-work"
 
     object Params {
         const val START_DATE = "startDate"
