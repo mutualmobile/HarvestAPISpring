@@ -3,7 +3,6 @@ package com.mutualmobile.praxisspringboot.controllers.orgs.impl
 import com.mutualmobile.praxisspringboot.controllers.orgs.UserProjectApi
 import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.projects.HarvestUserWork
-import com.mutualmobile.praxisspringboot.data.user.HarvestUserProject
 import com.mutualmobile.praxisspringboot.services.orgs.OrganizationProjectService
 import com.mutualmobile.praxisspringboot.services.orgs.UserProjectService
 import com.mutualmobile.praxisspringboot.services.user.UserDataService
@@ -23,17 +22,23 @@ class UserProjectApiImpl : UserProjectApi {
     @Autowired
     lateinit var userProjectService: UserProjectService
 
-    override fun assignProjectToUser(
-        projectId: String,
-        userId: String
-    ): ResponseEntity<ApiResponse<HarvestUserProject>> {
-        val doesProjectExist = organizationProjectService.getProjectById(projectId = projectId) != null
-        val doesUserExist = userDataService.getUserById(userId = userId) != null
-
-        if (!doesProjectExist || !doesUserExist) return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
-            .body(ApiResponse(message = "Either the project or the user doesn't exist for the given ID(s)!"))
-
-        return userProjectService.assignProjectToUser(projectId = projectId, userId = userId)
+    override fun assignProjectsToUsers(workList: HashMap<String, List<String>>): ResponseEntity<ApiResponse<Unit>> {
+        return try {
+            workList.forEach { (projectId, userIds) ->
+                if (!organizationProjectService.checkIfProjectExists(projectId = projectId)) throw Exception("No project found with the ID: $projectId")
+                userIds.forEach { userId ->
+                    if (!userDataService.checkIfUserExists(userId = userId)) throw Exception("No user found with the ID: $userId")
+                }
+            }
+            val result = userProjectService.assignProjectsToUsers(workList = workList)
+            if (result.data == null) {
+                ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(result)
+            } else {
+                ResponseEntity.ok(result)
+            }
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(ApiResponse(message = e.localizedMessage))
+        }
     }
 
     override fun logWorkTime(userWork: HarvestUserWork): ResponseEntity<ApiResponse<Unit>> {

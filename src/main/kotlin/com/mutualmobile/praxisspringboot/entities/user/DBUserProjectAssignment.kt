@@ -5,8 +5,8 @@ import javax.persistence.Entity
 import javax.persistence.Table
 
 @Entity
-@Table(name = "user_project")
-class DBUserProject(
+@Table(name = "user_project_assignment")
+class DBUserProjectAssignment(
     val userId: String,
     val projectId: String
-): BaseEntity()
+) : BaseEntity()

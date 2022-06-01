@@ -6,6 +6,9 @@ import com.mutualmobile.praxisspringboot.data.user.HarvestUserProject
 import org.springframework.http.ResponseEntity
 
 interface UserProjectService {
+    fun assignProjectsToUsers(
+        workList: HashMap<String, List<String>>
+    ): ApiResponse<Unit>
     fun assignProjectToUser(
         projectId: String,
         userId: String

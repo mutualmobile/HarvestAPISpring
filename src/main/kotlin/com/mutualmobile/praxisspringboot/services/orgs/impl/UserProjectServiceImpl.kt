@@ -3,14 +3,13 @@ package com.mutualmobile.praxisspringboot.services.orgs.impl
 import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.projects.HarvestUserWork
 import com.mutualmobile.praxisspringboot.data.user.HarvestUserProject
+import com.mutualmobile.praxisspringboot.data.user.HarvestUserProjectAssignment
 import com.mutualmobile.praxisspringboot.entities.projects.DBUserWork
-import com.mutualmobile.praxisspringboot.entities.user.DBUserProject
+import com.mutualmobile.praxisspringboot.entities.user.DBUserProjectAssignment
 import com.mutualmobile.praxisspringboot.repositories.UserProjectRepository
 import com.mutualmobile.praxisspringboot.repositories.orgs.UserWorkRepository
 import com.mutualmobile.praxisspringboot.services.orgs.UserProjectService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
@@ -21,20 +20,43 @@ class UserProjectServiceImpl : UserProjectService {
     @Autowired
     lateinit var userWorkRepository: UserWorkRepository
 
-    override fun assignProjectToUser(
-        projectId: String,
-        userId: String
-    ): ResponseEntity<ApiResponse<HarvestUserProject>> {
+    override fun assignProjectsToUsers(workList: HashMap< String,
+        List< String
+    >>): ApiResponse<Unit> {
         return try {
-            val dbProject = userProjectRepository.findByProjectIdAndUserId(projectId = projectId, userId = userId)
-            val doesUserProjectExist: Boolean = dbProject != null
+            val workToSave = mutableListOf<HarvestUserProjectAssignment>()
+            val errorProjectAssignmentIds = mutableListOf<Pair<String, String>>()
+            workList.forEach { (projectId, userIds) ->
+                userIds.forEach { userId ->
+                    val doesProjectAssignmentExist = userProjectRepository.existsByProjectIdAndUserId(projectId, userId)
 
-            if (doesUserProjectExist) throw Exception("The specified user is already working in the given project!")
+                    if (!doesProjectAssignmentExist) {
+                        workToSave.add(HarvestUserProjectAssignment(projectId = projectId, userId = userId))
+                    } else {
+                        val errorPair = Pair(projectId, userId)
 
-            val result = userProjectRepository.save(DBUserProject(userId = userId, projectId = projectId))
-            ResponseEntity.ok(ApiResponse(message = "Assigned successfully!", data = result.toHarvestUserProject()))
+                        if (!errorProjectAssignmentIds.contains(errorPair)) {
+                            errorProjectAssignmentIds.add(errorPair)
+                        }
+                    }
+                }
+            }
+            userProjectRepository.saveAll(workToSave.map { it.toDbUserProject() })
+            if (errorProjectAssignmentIds.isNotEmpty()) {
+                throw Exception(
+                    "The correct work was saved successfully but the following project-user assignments already exist: ${
+                        errorProjectAssignmentIds.joinToString { "ProjectId:${it.first} - UserId:${it.second}" }
+                    }"
+                )
+            }
+            ApiResponse(message = "Logged work successfully!", data = Unit)
         } catch (e: Exception) {
-            ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(ApiResponse(message = e.message))
+            ApiResponse(message = buildString {
+                append("Couldn't log work.")
+                e.localizedMessage?.let { nnExceptionMsg ->
+                    append(" Reason: $nnExceptionMsg")
+                }
+            })
         }
     }
 
@@ -64,16 +86,18 @@ class UserProjectServiceImpl : UserProjectService {
     }
 }
 
-fun DBUserProject.toHarvestUserProject() = HarvestUserProject(
+fun DBUserProjectAssignment.toHarvestUserProject() = HarvestUserProjectAssignment(
     id = id,
     userId = userId,
     projectId = projectId
 )
 
-fun HarvestUserProject.toDbUserProject() = DBUserProject(
+fun HarvestUserProjectAssignment.toDbUserProject() = DBUserProjectAssignment(
     userId = userId, projectId = projectId
 ).apply {
-    this.id = this@toDbUserProject.id
+    this@toDbUserProject.id?.let { nnId ->
+        this.id = nnId
+    }
 }
 
 fun DBUserWork.toHarvestUserWork() = HarvestUserWork(
