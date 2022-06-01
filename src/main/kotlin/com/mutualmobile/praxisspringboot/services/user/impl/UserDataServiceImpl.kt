@@ -18,6 +18,7 @@ import java.util.Date
 import javax.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.userdetails.UserDetails
@@ -129,6 +130,14 @@ class UserDataServiceImpl : UserDataService {
         }
     }
 
+    override fun getUserById(userId: String): RequestUser? {
+        return userRepository.findByIdOrNull(userId)?.toRequestUser()
+    }
+
+    override fun checkIfUserExists(userId: String): Boolean {
+        return userRepository.existsById(userId)
+    }
+
     override fun postResetPassword(token: String?, newPassword: String?): ResponseEntity<ApiResponse<Void>?> {
         if (token == null || newPassword == null) {
             return ResponseEntity.ok(ApiResponse("Failed to fetch params"))
@@ -206,8 +215,6 @@ class UserDataServiceImpl : UserDataService {
         }
         return ApiResponse("User Not Found!")
     }
-
-
 }
 
 fun DBHarvestUser.toRequestUser(): RequestUser {
@@ -216,10 +223,10 @@ fun DBHarvestUser.toRequestUser(): RequestUser {
         firstName = this.firstName?.trim(),
         lastName = this.lastName?.trim(),
         email = this.email?.trim(),
-        null,
+        password = null,
         profilePic = this.avatarUrl,
         modifiedTime = this.lastModifiedTime?.toString(),
-        orgId = this.orgId
+        orgId = this.orgId,
     )
 }
 
@@ -230,6 +237,6 @@ fun RequestUser?.toDBUser(): DBHarvestUser {
         firstName = this?.firstName?.trim(),
         lastName = this?.lastName?.trim(),
         avatarUrl = this?.profilePic,
-        orgId = this?.orgId!!
+        orgId = this?.orgId!!,
     )
 }

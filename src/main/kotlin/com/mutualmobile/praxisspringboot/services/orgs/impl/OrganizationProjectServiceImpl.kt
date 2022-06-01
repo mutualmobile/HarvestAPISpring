@@ -52,6 +52,14 @@ class OrganizationProjectServiceImpl : OrganizationProjectService {
             true
         }
     }
+
+    override fun getProjectById(projectId: String): OrganizationProject? {
+        return orgProjectsRepository.findByIdOrNull(id = projectId)?.toOrgProject()
+    }
+
+    override fun checkIfProjectExists(projectId: String): Boolean {
+        return orgProjectsRepository.existsById(projectId)
+    }
 }
 
 private fun OrganizationProject.toDbOrgProject() = DBOrgProjects(
