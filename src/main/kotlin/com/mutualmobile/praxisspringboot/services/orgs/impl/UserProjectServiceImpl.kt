@@ -20,9 +20,7 @@ class UserProjectServiceImpl : UserProjectService {
     @Autowired
     lateinit var userWorkRepository: UserWorkRepository
 
-    override fun assignProjectsToUsers(workList: HashMap< String,
-        List< String
-    >>): ApiResponse<Unit> {
+    override fun assignProjectsToUsers(workList: HashMap<String, List<String>>): ApiResponse<Unit> {
         return try {
             val workToSave = mutableListOf<HarvestUserProjectAssignment>()
             val errorProjectAssignmentIds = mutableListOf<Pair<String, String>>()
