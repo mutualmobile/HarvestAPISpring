@@ -43,10 +43,13 @@ class UserProjectApiImpl : UserProjectApi {
 
     override fun logWorkTime(userWork: HarvestUserWork): ResponseEntity<ApiResponse<Unit>> {
         return try {
-            userProjectService.findUserLinkedProject(projectId = userWork.projectId, userId = userWork.userId)
-                ?: throw Exception(
-                    "Either no project exists with the given ID or the current user hasn't been assigned to it!"
-                )
+            val doesUserLinkedProjectExist = userProjectService.checkIfUserLinkedProjectExists(
+                projectId = userWork.projectId,
+                userId = userWork.userId
+            )
+            if (!doesUserLinkedProjectExist) throw Exception(
+                "Either no project exists with the given ID or the current user hasn't been assigned to it!"
+            )
 
             val result = userProjectService.logWorkTime(userWork)
 

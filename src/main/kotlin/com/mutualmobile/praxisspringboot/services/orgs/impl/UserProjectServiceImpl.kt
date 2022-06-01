@@ -2,7 +2,6 @@ package com.mutualmobile.praxisspringboot.services.orgs.impl
 
 import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.projects.HarvestUserWork
-import com.mutualmobile.praxisspringboot.data.user.HarvestUserProject
 import com.mutualmobile.praxisspringboot.data.user.HarvestUserProjectAssignment
 import com.mutualmobile.praxisspringboot.entities.projects.DBUserWork
 import com.mutualmobile.praxisspringboot.entities.user.DBUserProjectAssignment
@@ -42,7 +41,7 @@ class UserProjectServiceImpl : UserProjectService {
             userProjectRepository.saveAll(workToSave.map { it.toDbUserProject() })
             if (errorProjectAssignmentIds.isNotEmpty()) {
                 throw Exception(
-                    "The correct work was saved successfully but the following project-user assignments already exist: ${
+                    "The correct assignments were made successfully but the following project-user assignments already exist: ${
                         errorProjectAssignmentIds.joinToString { "ProjectId:${it.first} - UserId:${it.second}" }
                     }"
                 )
@@ -50,7 +49,7 @@ class UserProjectServiceImpl : UserProjectService {
             ApiResponse(message = "Logged work successfully!", data = Unit)
         } catch (e: Exception) {
             ApiResponse(message = buildString {
-                append("Couldn't log work.")
+                append("Couldn't complete work.")
                 e.localizedMessage?.let { nnExceptionMsg ->
                     append(" Reason: $nnExceptionMsg")
                 }
@@ -58,15 +57,15 @@ class UserProjectServiceImpl : UserProjectService {
         }
     }
 
-    override fun findUserLinkedProject(
+    override fun checkIfUserLinkedProjectExists(
         projectId: String,
         userId: String
-    ): HarvestUserProject? {
+    ): Boolean {
         return userProjectRepository
-            .findByProjectIdAndUserId(
+            .existsByProjectIdAndUserId(
                 projectId = projectId,
                 userId = userId
-            )?.toHarvestUserProject()
+            )
     }
 
     override fun logWorkTime(harvestUserWork: HarvestUserWork): ApiResponse<Unit> {

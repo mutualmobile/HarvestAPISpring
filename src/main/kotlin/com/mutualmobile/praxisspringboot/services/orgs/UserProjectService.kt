@@ -2,7 +2,6 @@ package com.mutualmobile.praxisspringboot.services.orgs
 
 import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.projects.HarvestUserWork
-import com.mutualmobile.praxisspringboot.data.user.HarvestUserProject
 
 interface UserProjectService {
     fun assignProjectsToUsers(
@@ -10,8 +9,8 @@ interface UserProjectService {
     ): ApiResponse<Unit>
 
     /** Checks whether the given user has been assigned to the given project or not (by searching it in the
-     * user_project table). Returns [HarvestUserProject] if a project is found, else returns null. */
-    fun findUserLinkedProject(projectId: String, userId: String): HarvestUserProject?
+     * user_project table). Returns true if a project is found, else returns false. */
+    fun checkIfUserLinkedProjectExists(projectId: String, userId: String): Boolean
 
     fun logWorkTime(harvestUserWork: HarvestUserWork): ApiResponse<Unit>
 }
