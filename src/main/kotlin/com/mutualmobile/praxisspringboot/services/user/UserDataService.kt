@@ -22,5 +22,6 @@ interface UserDataService {
     fun verifyEmail(token: String?): RedirectView
     fun getUsersByTypeAndOrgId(userType: String, orgId: String?, isUserDeleted: Boolean, pageable: Pageable): ApiResponse<Pair<Int,List<RequestUser>>>
     fun getUserById(userId: String): RequestUser?
+    fun getAllUsersById(userIds: List<String>): List<RequestUser>
     fun checkIfUserExists(userId: String): Boolean
 }

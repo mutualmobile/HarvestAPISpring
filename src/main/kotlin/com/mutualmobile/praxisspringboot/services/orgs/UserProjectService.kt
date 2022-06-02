@@ -13,4 +13,5 @@ interface UserProjectService {
     fun checkIfUserLinkedProjectExists(projectId: String, userId: String): Boolean
 
     fun logWorkTime(harvestUserWork: HarvestUserWork): ApiResponse<Unit>
+    fun getAllUserIdsFromProjectId(projectId: String): List<String> // List<UserId>
 }

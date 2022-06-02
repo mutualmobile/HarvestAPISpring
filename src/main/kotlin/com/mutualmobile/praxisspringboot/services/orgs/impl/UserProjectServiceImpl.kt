@@ -81,6 +81,10 @@ class UserProjectServiceImpl : UserProjectService {
             })
         }
     }
+
+    override fun getAllUserIdsFromProjectId(projectId: String): List<String> {
+        return userWorkRepository.getAllUserIdsForProjectId(projectId = projectId)
+    }
 }
 
 fun DBUserProjectAssignment.toHarvestUserProject() = HarvestUserProjectAssignment(

@@ -12,4 +12,9 @@ interface UserWorkRepository : JpaRepository<DBUserWork, String> {
         nativeQuery = true
     )
     fun getAllProjectIdsForUserId(userId: String): List<String> // List<ProjectId>
+    @Query(
+        value = "SELECT uw.user_id FROM user_work uw WHERE uw.project_id = :projectId",
+        nativeQuery = true
+    )
+    fun getAllUserIdsForProjectId(projectId: String): List<String>
 }

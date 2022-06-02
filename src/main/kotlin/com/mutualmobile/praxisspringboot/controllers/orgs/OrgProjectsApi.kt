@@ -3,6 +3,7 @@ package com.mutualmobile.praxisspringboot.controllers.orgs
 import com.mutualmobile.praxisspringboot.controllers.Endpoint
 import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.orgs.OrganizationProject
+import com.mutualmobile.praxisspringboot.data.user.RequestUser
 import javax.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -32,4 +33,9 @@ interface OrgProjectsApi {
 
     @DeleteMapping(Endpoint.ORG_PROJECT)
     fun deleteProject(@RequestParam projectId: String): ResponseEntity<ApiResponse<Unit>>
+
+    @GetMapping(Endpoint.LIST_USERS_IN_PROJECT)
+    fun getListOfUsersForAProject(
+        @RequestParam projectId: String
+    ): ResponseEntity<ApiResponse<List<RequestUser>>>
 }

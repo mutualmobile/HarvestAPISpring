@@ -35,6 +35,8 @@ object Endpoint {
     const val TIME_ENTRIES = "$API_URL/organization-project-user/times"
     const val TIME_ENTRY = "$API_URL/organization-project-user/time"
 
+    const val LIST_USERS_IN_PROJECT = "$ORG_PROJECT/list-users"
+
     //ADMIN
     const val LIST_USERS = "$API_URL$ADMIN/users"
     const val ASSIGN_PROJECT = "$API_URL$ORG_ADMIN/assign-user-project"
