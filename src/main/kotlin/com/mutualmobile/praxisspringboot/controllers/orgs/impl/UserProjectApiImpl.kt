@@ -2,10 +2,13 @@ package com.mutualmobile.praxisspringboot.controllers.orgs.impl
 
 import com.mutualmobile.praxisspringboot.controllers.orgs.UserProjectApi
 import com.mutualmobile.praxisspringboot.data.ApiResponse
+import com.mutualmobile.praxisspringboot.data.models.orgs.OrganizationProject
 import com.mutualmobile.praxisspringboot.data.models.projects.HarvestUserWork
 import com.mutualmobile.praxisspringboot.services.orgs.OrganizationProjectService
 import com.mutualmobile.praxisspringboot.services.orgs.UserProjectService
+import com.mutualmobile.praxisspringboot.services.orgs.UserWorkService
 import com.mutualmobile.praxisspringboot.services.user.UserDataService
+import javax.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -21,6 +24,9 @@ class UserProjectApiImpl : UserProjectApi {
 
     @Autowired
     lateinit var userProjectService: UserProjectService
+
+    @Autowired
+    lateinit var userWorkService: UserWorkService
 
     override fun assignProjectsToUsers(workList: HashMap<String, List<String>>): ResponseEntity<ApiResponse<Unit>> {
         return try {
@@ -44,8 +50,7 @@ class UserProjectApiImpl : UserProjectApi {
     override fun logWorkTime(userWork: HarvestUserWork): ResponseEntity<ApiResponse<Unit>> {
         return try {
             val doesUserLinkedProjectExist = userProjectService.checkIfUserLinkedProjectExists(
-                projectId = userWork.projectId,
-                userId = userWork.userId
+                projectId = userWork.projectId, userId = userWork.userId
             )
             if (!doesUserLinkedProjectExist) throw Exception(
                 "Either no project exists with the given ID or the current user hasn't been assigned to it!"
@@ -58,6 +63,24 @@ class UserProjectApiImpl : UserProjectApi {
             } else {
                 ResponseEntity.ok(result)
             }
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(ApiResponse(message = e.localizedMessage))
+        }
+    }
+
+    override fun getUserAssignedProjects(
+        userId: String?, httpServletRequest: HttpServletRequest
+    ): ResponseEntity<ApiResponse<List<OrganizationProject>>> {
+        return try {
+            // Give preference to the userId param, if that's null, try using the token to find the ID, if that fails too, throw an exception
+            val nnUserId =
+                userId ?: userDataService.getUser(httpServletRequest)?.id ?: throw Exception("No user found!")
+
+            val result = userWorkService.getUserAssignedProjects(nnUserId)
+
+            if (result.data == null) throw Exception(result.message)
+
+            ResponseEntity.ok(result)
         } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(ApiResponse(message = e.localizedMessage))
         }
