@@ -62,16 +62,20 @@ class OrganizationProjectServiceImpl : OrganizationProjectService {
     }
 }
 
-private fun OrganizationProject.toDbOrgProject() = DBOrgProjects(
+fun OrganizationProject.toDbOrgProject() = DBOrgProjects(
     name = name,
     client = client,
     startDate = startDate,
     endDate = endDate,
     isIndefinite = isIndefinite,
     organizationId = organizationId
-)
+).apply {
+    this@toDbOrgProject.id?.let { nnId ->
+        this.id = nnId
+    }
+}
 
-private fun DBOrgProjects.toOrgProject() = OrganizationProject(
+fun DBOrgProjects.toOrgProject() = OrganizationProject(
     id = id,
     name = name,
     client = client,

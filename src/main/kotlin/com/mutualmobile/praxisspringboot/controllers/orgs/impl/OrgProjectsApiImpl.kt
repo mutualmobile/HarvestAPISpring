@@ -4,8 +4,11 @@ import com.mutualmobile.praxisspringboot.controllers.authuser.getToken
 import com.mutualmobile.praxisspringboot.controllers.orgs.OrgProjectsApi
 import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.orgs.OrganizationProject
+import com.mutualmobile.praxisspringboot.data.user.RequestUser
 import com.mutualmobile.praxisspringboot.services.orgs.OrganizationProjectService
+import com.mutualmobile.praxisspringboot.services.orgs.UserProjectService
 import com.mutualmobile.praxisspringboot.services.user.UserAuthService
+import com.mutualmobile.praxisspringboot.services.user.UserDataService
 import javax.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -20,6 +23,12 @@ class OrgProjectsApiImpl : OrgProjectsApi {
 
     @Autowired
     lateinit var userAuthService: UserAuthService
+
+    @Autowired
+    lateinit var userDataService: UserDataService
+
+    @Autowired
+    lateinit var userProjectService: UserProjectService
 
     override fun getProjects(
         orgId: String?,
@@ -77,6 +86,20 @@ class OrgProjectsApiImpl : OrgProjectsApi {
             ResponseEntity.ok(ApiResponse(message = "Deleted project successfully!"))
         } else {
             ResponseEntity.status(HttpStatus.NO_CONTENT).body(ApiResponse(message = "Couldn't delete project!"))
+        }
+    }
+
+    override fun getListOfUsersForAProject(projectId: String): ResponseEntity<ApiResponse<List<RequestUser>>> {
+        return try {
+            val userIds = userProjectService.getAllUserIdsFromProjectId(projectId = projectId)
+            if (userIds.isEmpty()) throw Exception("No user Id(s) found for the given projectId!")
+
+            val users = userDataService.getAllUsersById(userIds)
+            if (users.isEmpty()) throw Exception("No users found for the given user ID(s)!")
+
+            ResponseEntity.ok(ApiResponse(data = users))
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(ApiResponse(message = e.localizedMessage))
         }
     }
 }

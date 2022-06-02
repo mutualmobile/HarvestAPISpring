@@ -134,6 +134,10 @@ class UserDataServiceImpl : UserDataService {
         return userRepository.findByIdOrNull(userId)?.toRequestUser()
     }
 
+    override fun getAllUsersById(userIds: List<String>): List<RequestUser> {
+        return userRepository.findAllById(userIds).map { it.toRequestUser() }
+    }
+
     override fun checkIfUserExists(userId: String): Boolean {
         return userRepository.existsById(userId)
     }
