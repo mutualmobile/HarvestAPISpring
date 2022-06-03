@@ -46,7 +46,7 @@ class UserProjectServiceImpl : UserProjectService {
                     }"
                 )
             }
-            ApiResponse(message = "Logged work successfully!", data = Unit)
+            ApiResponse(message = "Assigned project(s) to user(s) successfully!", data = Unit)
         } catch (e: Exception) {
             ApiResponse(message = buildString {
                 append("Couldn't complete work.")

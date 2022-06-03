@@ -7,13 +7,15 @@ import org.springframework.data.jpa.repository.Query
 
 interface UserWorkRepository : JpaRepository<DBUserWork, String> {
     fun findAllByWorkDateBetweenAndUserId(startDate: Date, endDate: Date, userId: String): List<DBUserWork>
+
+    // TODO : Move getAllProjectIdsForUserId & getAllUserIdsForProjectId to their respective Repository (they don't belong here)
     @Query(
-        value = "SELECT uw.project_id FROM user_work uw WHERE uw.user_id = :userId",
+        value = "SELECT upa.project_id FROM user_project_assignment upa WHERE upa.user_id = :userId",
         nativeQuery = true
     )
     fun getAllProjectIdsForUserId(userId: String): List<String> // List<ProjectId>
     @Query(
-        value = "SELECT uw.user_id FROM user_work uw WHERE uw.project_id = :projectId",
+        value = "SELECT upa.user_id FROM user_project_assignment upa WHERE upa.project_id = :projectId",
         nativeQuery = true
     )
     fun getAllUserIdsForProjectId(projectId: String): List<String>
