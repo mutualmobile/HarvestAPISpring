@@ -31,7 +31,7 @@ interface UserRepository : JpaRepository<DBHarvestUser, String> {
         "SELECT * FROM praxisuser ksuser " +
                 "JOIN role ksrole ON ksuser.id = ksrole.user_id " +
                 "WHERE ksuser.org_id = :orgId " +
-                "AND concat(ksuser.first_name,' ',ksuser.last_name) like concat('%', :search, '%') " +
+                "AND LOWER(concat(ksuser.first_name,' ',ksuser.last_name)) like LOWER(concat('%', :search, '%')) " +
                 "AND ksrole.name = :type AND ksuser.deleted = :isUserDeleted",
         nativeQuery = true
     )
