@@ -63,7 +63,7 @@ class OrganizationServiceImpl : OrganizationService {
         // TODO fetch the role of the user from jwt token
         // TODO based on role return deleted and not deleted records
         val order: Sort.Order = Sort.Order(Sort.Direction.ASC, "name")
-        search?.let {
+        search?.takeIf { it.isNotEmpty() }?.let {
             return orgRepository.findAllByNameIgnoreCaseAndDeleted(
                 search,
                 false,
