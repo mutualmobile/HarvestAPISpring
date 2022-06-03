@@ -26,7 +26,7 @@ class OrganizationProjectServiceImpl : OrganizationProjectService {
         search: String?
     ): Pair<Int, List<OrganizationProject>> {
         val allProjects = search?.takeIf { it.isNotEmpty() }?.let {
-            orgProjectsRepository.findAllByOrganizationIdAndNameLikeIgnoreCase(
+            orgProjectsRepository.findAllByOrganizationIdAndNameContainingIgnoreCase(
                 organizationId = organizationId, search,
                 pageable = PageRequest.of(offset, limit)
             )

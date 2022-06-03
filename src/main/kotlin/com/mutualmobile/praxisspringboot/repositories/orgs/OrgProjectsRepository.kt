@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface OrgProjectsRepository : JpaRepository<DBOrgProjects, String> {
-    fun findAllByOrganizationIdAndNameLikeIgnoreCase(
+    fun findAllByOrganizationIdAndNameContainingIgnoreCase(
         organizationId: String,
         name: String,
         pageable: Pageable
