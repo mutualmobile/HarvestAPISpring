@@ -28,6 +28,22 @@ interface UserRepository : JpaRepository<DBHarvestUser, String> {
         ): Page<DBHarvestUser>
 
     @Query(
+        "SELECT * FROM praxisuser ksuser " +
+                "JOIN role ksrole ON ksuser.id = ksrole.user_id " +
+                "WHERE ksuser.org_id = :orgId " +
+                "AND concat(ksuser.first_name,' ',ksuser.last_name) like concat('%', :search, '%') " +
+                "AND ksrole.name = :type AND ksuser.deleted = :isUserDeleted",
+        nativeQuery = true
+    )
+    fun findByTypeAndOrgIdAndSearch(
+        type: String,
+        orgId: String?,
+        isUserDeleted: Boolean,
+        pageable: Pageable,
+        search: String
+    ): Page<DBHarvestUser>
+
+    @Query(
         "select * FROM praxisuser ksuser JOIN role ksrole on ksuser.id = ksrole.user_id where ksrole.name like concat('%', :type, '%') offset :offset limit :limit",
         nativeQuery = true
     )

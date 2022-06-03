@@ -28,6 +28,7 @@ interface OrgUsersApi {
         @RequestParam isUserDeleted: Boolean = false,
         @RequestParam(value = Endpoint.Params.OFFSET, required = false) offset: Int = 0,
         @RequestParam(value = Endpoint.Params.LIMIT, required = false) limit: Int = 10,
+        @RequestParam(value = Endpoint.Params.SEARCH_KEY, required = false) search: String?,
         httpServletRequest: HttpServletRequest
     ): ApiResponse<Pair<Int, List<RequestUser>>>
 }

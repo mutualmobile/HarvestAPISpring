@@ -34,6 +34,7 @@ class OrgProjectsApiImpl : OrgProjectsApi {
         orgId: String?,
         offset: Int?,
         limit: Int?,
+        search: String?,
         httpServletRequest: HttpServletRequest
     ): ApiResponse<Pair<Int, List<OrganizationProject>>> {
         val safeOffset = offset ?: 0
@@ -50,7 +51,7 @@ class OrgProjectsApiImpl : OrgProjectsApi {
             .getAllProjects(
                 organizationId = organizationId,
                 offset = safeOffset,
-                limit = safeLimit
+                limit = safeLimit,search=search
             )
         return ApiResponse(data = result)
     }

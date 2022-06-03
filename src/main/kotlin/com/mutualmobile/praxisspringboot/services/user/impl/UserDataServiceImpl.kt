@@ -116,14 +116,24 @@ class UserDataServiceImpl : UserDataService {
         orgId: String?,
         isUserDeleted: Boolean,
         pageable: Pageable,
+        search: String?,
     ): ApiResponse<Pair<Int, List<RequestUser>>> {
         return try {
-            val result = userRepository.findByTypeAndOrgId(
-                type = userType,
-                orgId = orgId,
-                isUserDeleted = isUserDeleted,
-                pageable = pageable
-            ).map { it.toRequestUser() }
+            val result = search?.takeIf { it.isNotEmpty() }?.let {
+                userRepository.findByTypeAndOrgIdAndSearch(
+                    type = userType,
+                    orgId = orgId,
+                    isUserDeleted = isUserDeleted,
+                    pageable = pageable, search
+                ).map { it.toRequestUser() }
+            } ?: run {
+                userRepository.findByTypeAndOrgId(
+                    type = userType,
+                    orgId = orgId,
+                    isUserDeleted = isUserDeleted,
+                    pageable = pageable
+                ).map { it.toRequestUser() }
+            }
             ApiResponse(data = Pair(result.totalPages, result.content))
         } catch (e: Exception) {
             ApiResponse(message = e.localizedMessage ?: "Unexpected error occurred!")

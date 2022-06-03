@@ -43,6 +43,7 @@ class OrgUsersApiImpl : OrgUsersApi {
         isUserDeleted: Boolean,
         offset: Int,
         limit: Int,
+        search:String?,
         httpServletRequest: HttpServletRequest
     ): ApiResponse<Pair<Int,List<RequestUser>>> {
         val organizationId: String = orgIdentifier?.let { nnOrgIdentifier ->
@@ -60,7 +61,7 @@ class OrgUsersApiImpl : OrgUsersApi {
             userType = userType,
             orgId = organizationId,
             isUserDeleted = isUserDeleted,
-            pageable = PageRequest.of(offset, limit)
+            pageable = PageRequest.of(offset, limit),search
         )
     }
 }

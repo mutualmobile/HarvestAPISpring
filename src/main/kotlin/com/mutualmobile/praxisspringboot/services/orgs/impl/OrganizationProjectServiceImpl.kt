@@ -19,12 +19,24 @@ class OrganizationProjectServiceImpl : OrganizationProjectService {
         return project.toOrgProject()
     }
 
-    override fun getAllProjects(organizationId: String, offset: Int, limit: Int): Pair<Int, List<OrganizationProject>> {
-        val allProjects = orgProjectsRepository.findAllByOrganizationId(
-            organizationId = organizationId,
-            pageable = PageRequest.of(offset, limit)
-        )
-        return Pair(allProjects.totalPages,allProjects.content.map { it.toOrgProject() })
+    override fun getAllProjects(
+        organizationId: String,
+        offset: Int,
+        limit: Int,
+        search: String?
+    ): Pair<Int, List<OrganizationProject>> {
+        val allProjects = search?.takeIf { it.isNotEmpty() }?.let {
+            orgProjectsRepository.findAllByOrganizationIdAndNameLike(
+                organizationId = organizationId, search,
+                pageable = PageRequest.of(offset, limit)
+            )
+        } ?: run {
+            orgProjectsRepository.findAllByOrganizationId(
+                organizationId = organizationId,
+                pageable = PageRequest.of(offset, limit)
+            )
+        }
+        return Pair(allProjects.totalPages, allProjects.content.map { it.toOrgProject() })
     }
 
     override fun updateProject(organizationProject: OrganizationProject): Boolean {
