@@ -73,32 +73,7 @@ project.
 - [Fcm Token](#-fcm-token)
 - [Refresh Token](#-refresh-token)
 
-### Forgot Password Api
-- [Forgot Password]
-- [Reset Password]
-
-### Organization Api
-- [Find Organization By Identifier]
-
-### Organization Projects Api
-- [Create Project]
-- [Update Project]
-- [Delete Project]
-- [Find Projects In Organization]
-- [List of Users in a Project]
-
-### Organization Users Api
-- [Find Users in Organization]
-
-### User project Api
-- [Assign Projects to User]
-- [Log Work Time]
-- [Get Projects Assigned to a user]
-
-### User Work Api
-- [Get Work Logs for a Date Range]
-
-
+--------------
 ### Login User
 --------------
 
@@ -141,9 +116,9 @@ POST BASE_URL/api/v1/public/login
 | message      | `String` | Returns info for every type of request.                                               |
 
 
-
+--------------
 ### Register User
----------------------------
+--------------
 
 ```HTTP
 POST BASE_URL/api/v1/public/signup
@@ -213,10 +188,10 @@ POST BASE_URL/api/v1/public/signup
       "modifiedTime": "Sat Jun 04 12:03:52 UTC 2022",
       "orgId": "151d11a3-780d-4f03-bbad-889bd3707b02",
       "harvestOrganization": {
-         "name": "mmt",
-         "website": "mmt.com",
+         "name": "mm",
+         "website": "mm.com",
          "id": "151d11a3-780d-4f03-bbad-889bd3707b02",
-         "identifier": "com.mmt.org"
+         "identifier": "com.mm.org"
       }
    }
 }
@@ -249,9 +224,9 @@ POST BASE_URL/api/v1/public/signup
 | message      | `String` | Returns info for every type of request.                                               |
 
 
-
+--------------
 ### Logout User
----------------------------
+--------------
 ```HTTP
 POST BASE_URL/api/v1/logout
 ```
@@ -296,9 +271,9 @@ POST BASE_URL/api/v1/logout
 | message      | `String` | Returns info for every type of request.                                               |
 
 
-
+--------------
 ### Change Password
----------------------------
+--------------
 ```HTTP
 POST BASE_URL/api/v1/changePassword
 ```
@@ -315,11 +290,11 @@ POST BASE_URL/api/v1/changePassword
    BearerToken: String
 ```
 
-| param        | type                  | Description                                                                           |
-|:-------------|:----------------------|:--------------------------------------------------------------------------------------|
-| password     | `String`              | Existing Password of the account Logged in                                            |
-| oldPassword  | `String`              | New Password that we want to set for the account Logged in                            |
-| Bearer Token | `String`              | JWT Token for security purpose. This get generated once users Logged In Successfully. |
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| password     | `String` | New Password that we want to set for the account Logged in                            |
+| oldPassword  | `String` | Existing Password of the account Logged in                                            |
+| Bearer Token | `String` | JWT Token for security purpose. This get generated once users Logged In Successfully. |
 
 
 **Response**
@@ -345,9 +320,9 @@ POST BASE_URL/api/v1/changePassword
 | message      | `String` | Returns info for every type of request.                                               |
 
 
-
+--------------
 ### Get User
----------------------------
+--------------
 ```HTTP
 GET BASE_URL/api/v1/user
 ```
@@ -388,9 +363,9 @@ GET BASE_URL/api/v1/user
 | message      | `String` | Returns info for every type of request.                                               |
 
 
-
+--------------
 ### Update User
----------------------------
+--------------
 ```HTTP
 PUT BASE_URL/api/v1/user
 ```
@@ -406,10 +381,10 @@ PUT BASE_URL/api/v1/user
    "pushToken": String,
    "profilePic": String,
    "harvestOrganization": {
-      "name": "mmt",
-      "website": "mmt.com",
+      "name": "mm",
+      "website": "mm.com",
       "id": "151d11a3-780d-4f03-bbad-889bd3707b02",
-      "identifier": "com.mmt.org"
+      "identifier": "com.mm.org"
    }
 }]
 ```
@@ -460,9 +435,9 @@ PUT BASE_URL/api/v1/user
 | message      | `String` | Returns info for every type of request.                                               |
 
 
-
+--------------
 ### Fcm Token
----------------------------
+--------------
 ```HTTP
 POST BASE_URL/api/v1/fcmToken
 ```
@@ -478,10 +453,10 @@ POST BASE_URL/api/v1/fcmToken
    "pushToken": String,
    "profilePic": String,
    "harvestOrganization": {
-      "name": "mmt",
-      "website": "mmt.com",
+      "name": "mm",
+      "website": "mm.com",
       "id": "151d11a3-780d-4f03-bbad-889bd3707b02",
-      "identifier": "com.mmt.org"
+      "identifier": "com.mm.org"
    }
 }]
 ```
@@ -537,9 +512,9 @@ POST BASE_URL/api/v1/fcmToken
 | message      | `String` | Returns info for every type of request.                                               |
 
 
-
+--------------
 ### Refresh Token
----------------------------
+--------------
 ```HTTP
 POST BASE_URL/api/v1/refreshToken
 ```
@@ -560,7 +535,7 @@ POST BASE_URL/api/v1/refreshToken
 ```ts
 {
   "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhNTA1MjYwZi03YmZhLTRiZDUtODBjZS04MDBmOGE0M2IzZmMiLCJpYXQiOjE2NTM5Mzg2NzUsImV4cCI6MTY1Mzk0MjI3NX0.1CydFVIwoWq4gaqUhhEBy9XpQVaed-XW0s9qn0uFkUIg4h3WXiQkZrYUqULU0ZxeFMX1jfEMqO9FtTwt3zD5Zw",
-  "message": "User logged in Successfully",
+  "message": String,
   "refreshToken": "958ede86-163c-4e80-8d8f-ed81ff1d7421"
 }
 ```
@@ -581,3 +556,174 @@ POST BASE_URL/api/v1/refreshToken
 | param        | type     | Description                                                                           |
 |:-------------|:---------|:--------------------------------------------------------------------------------------|
 | message      | `String` | Returns info for every type of request.                                               |
+
+
+
+### Forgot Password Api
+- [Forgot Password](#-forgot-password)
+- [Reset Password](#-reset-password)
+
+--------------
+### Forgot Password
+--------------
+```HTTP
+POST BASE_URL/api/v1/public/forgotPassword
+```
+**Parameters**
+```ts
+{
+   email: String
+}
+```
+
+| param | type     | Description                                                          |
+|:------|:---------|:---------------------------------------------------------------------|
+| email | `String` | Email Address of the account for the one who's password is forgotten |
+
+**Response**
+
+1. When -> 200 OK
+```ts
+{
+  "message": "Email to reset the password sent to your Email"
+}
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| message      | `String` | Returns info for every type of request.                                               |
+
+2. When -> 400 BAD REQUEST
+```ts
+{
+  "message": "ERROR"
+}
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| message      | `String` | Returns info for every type of request.                                               |
+
+
+
+--------------
+### Reset Password
+--------------
+```HTTP
+POST BASE_URL/api/v1/resetPassword
+```
+**Request Body**
+```ts
+{
+   "token": String,
+   "password": String
+}
+```
+
+| param    | type     | Description                                                                |
+|:---------|:---------|:---------------------------------------------------------------------------|
+| token    | `String` | JWT Token for security purpose. We will get this from the email deep link. |
+| password | `String` | New Password that we want to set for the account                           |
+
+**Response**
+
+1. When -> 200 OK
+```ts
+{
+  "message": String
+}
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| message      | `String` | Returns info for every type of request.                                               |\
+
+2. When -> 400 BAD REQUEST
+```ts
+{
+  "message": "ERROR"
+}
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| message      | `String` | Returns info for every type of request.                                               |
+
+
+
+### Organization Api
+- [Find Organization By Identifier](#-find-organization-by-identifier)
+
+--------------
+### Find Organization By Identifier
+--------------
+```HTTP
+GET BASE_URL/api/v1/public/organization
+```
+**Parameters**
+```ts
+{
+   identifier: String
+}
+```
+
+| param      | type     | Description                            |
+|:-----------|:---------|:---------------------------------------|
+| identifier | `String` | Unique Identifier for the Organization |
+
+**Response**
+
+1. When -> 200 OK
+```ts
+{
+   "message": String
+   "harvestOrganization": {
+      "name": "mm",
+      "website": "mm.com",
+      "imgUrl": "www.someimg.png"
+      "id": "151d11a3-780d-4f03-bbad-889bd3707b02",
+      "identifier": "com.mm.org"
+   }
+}
+```
+
+| param               | type                  | Description                                           |
+|:--------------------|:----------------------|:------------------------------------------------------|
+| message             | `String`              | Returns info for every type of request.               |
+| harvestOrganization | `HarvestOrganization` | Organization Details                                  |
+| name                | `String`              | User's Organization Name                              |
+| website             | `String`              | Auto Generated Unique ID assigned to the Organization |
+| imgUrl              | `String`              | Url to the Organization uploaded Logo                 |
+| id                  | `String`              | Returns info for every type of request.               |
+| identifier          | `String`              | Unique Identifier for the Organization                |
+
+2. When -> 400 BAD REQUEST
+```ts
+{
+  "message": "ERROR"
+}
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| message      | `String` | Returns info for every type of request.                                               |
+
+
+### Organization Projects Api
+- [Create Project]
+- [Update Project]
+- [Delete Project]
+- [Find Projects In Organization]
+- [List of Users in a Project]
+
+### Organization Users Api
+- [Find Users in Organization]
+
+### User project Api
+- [Assign Projects to User]
+- [Log Work Time]
+- [Get Projects Assigned to a user]
+
+### User Work Api
+- [Get Work Logs for a Date Range]
+
