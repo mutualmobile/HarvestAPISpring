@@ -1,6 +1,8 @@
-# Harvest API 
+# Harvest API
+
 This repo showcase API development using Spring-Boot Technology stack using pure Kotlin.
-Currently, the API's are in WIP and being used in this [HarvestKMM]("https://github.com/mutualmobile/HarvestTimeKMP) project. 
+Currently, the API's are in WIP and being used in this [HarvestKMM]("https://github.com/mutualmobile/HarvestTimeKMP)
+project.
 
 **Servers**
 
@@ -9,7 +11,8 @@ Currently, the API's are in WIP and being used in this [HarvestKMM]("https://git
 | Production | WIP    | The public API server                                                                                                                                                                                              |
 | Staging    | https://harvestkmp.mmharvest.com/api/v1/public | The master branch automatically deploys to the staging server after every commit. |
 
-# Contents 
+# Contents
+
 - [Getting Started](#-getting-started)
 - [Spring Framework](#-spring-frameworks-used)
 - [Prerequisite](#-prerequisite)
@@ -18,6 +21,7 @@ Currently, the API's are in WIP and being used in this [HarvestKMM]("https://git
 
 ## Getting started
 -----------
+
 1. Clone this project
 2. Run following command
    ```sh
@@ -27,9 +31,10 @@ Currently, the API's are in WIP and being used in this [HarvestKMM]("https://git
    ```sh
    mvn spring-boot:run
    ```
-   
+
 ## Spring Frameworks used
 ----------
+
 1. [Spring Boot](https://projects.spring.io/spring-boot/)
 2. [Spring Boot Actuator](https://spring.io/guides/gs/actuator-service/)
 3. [Spring Data JPA](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/)
@@ -37,9 +42,9 @@ Currently, the API's are in WIP and being used in this [HarvestKMM]("https://git
 5. [Hibernate](http://hibernate.org/)
 6. [Spring REST Docs](https://projects.spring.io/spring-restdocs/)
 
-
 ## Prerequisite
 -------------
+
 1. Kotlin
 2. H2 DB
 3. Maven
@@ -49,26 +54,41 @@ Currently, the API's are in WIP and being used in this [HarvestKMM]("https://git
 
 # API References
 --------------------- 
-- [Login User](#-login-user)
-- Get Organization 
-- Sign In 
-- Sign Up 
-- Create Organization 
-- Update Organization 
-- Read Organization 
-- Delete Organization 
-- Assign Users 
-- Assign Project to Users 
-- Time Recording Start/Stop
-- Delete User 
 
-### Login User 
+- [Auth Api](#-auth-api)
+- [Login User](#-login-user)
+- [Get Organization](#-signup-user)
+- Sign In
+- Sign Up
+- Create Organization
+- Update Organization
+- Read Organization
+- Delete Organization
+- Assign Users
+- Assign Project to Users
+- Time Recording Start/Stop
+- Delete User
+
+### Auth Api
 --------------
+-[Login User](#-login-user)
+-[Register User / SignUp User](#-register-user)
+-[Logout user](#-logout-user)
+-[Change Password](#-change-password)
+-[Get User](#-get-user)
+-[Update User](#-update-user)
+-[Fcm Token](#-fcm-token)
+-[Refresh Token](#-refresh-token)
+
+
+### Login User
+--------------
+
 ```HTTP
 POST BASE_URL/login
 ```
 
-200 OK : LogIn the user, Successfully. 
+200 OK : LogIn the user, Successfully.
 
 **Request Body**
 
@@ -77,8 +97,7 @@ POST BASE_URL/login
 | Email  | `String`    | Users official email id.                                                                                                                                                                                                                                                              |
 | Password | `String`    | Password, which user set while sign up.                                                                                                                                                                                                                                                               |
 
-
-** Response ** 
+** Response **
 
 ```ts
 {
@@ -94,6 +113,97 @@ POST BASE_URL/login
 | message | `String`    | Returns info for every type of request.                                                                                                                                                                                                                                                        |
 | refreshToken  | `String` | Unique Token for each user                                                                                                                                                                                                                                       |  |
 
+### Register User
+---------------------------
 
-## Generate Organization 
+```HTTP
+POST BASE_URL/signup
+```
+
+For Existing Organization User SignUp ->
+200 OK : Registration Successful! Please verify your email before getting started!
+400 BAD REQUEST : An account with this email address already exist
+
+**Request Body**
+
+```ts
+{
+    "email":"yugesh@mutualmobile.com",
+    "password":"password",
+    "firstName":"Yugesh",
+    "lastName":"Jain",
+    "harvestOrganization":{
+        "name":"mm",
+        "website":"mm.com",
+        "identifier":"com.mm.org"
+    }
+}
+```
+
+| param               | type                  | Description                             |
+|:--------------------|:----------------------|:----------------------------------------|
+| email               | `String`              | Users official email id.                |
+| password            | `String`              | Password, which user set while sign up. |
+| firstName           | `String`              | First Name of the user Signing Up       |
+| lastName            | `String`              | Last Name of the user Signing Up        |
+| harvestOrganization | `HarvestOrganization` | Organization Details                    |
+| name                | `String`              | User's Organization Name                |
+| website             | `String`              | Web Address for the Organization        |
+| identifier          | `String`              | Unique Identifier for the Organization  |
+
+**Response**
+
+```ts
+{
+   "message": "Registration Successful! Please verify your email before getting started!",
+   "data": {
+      "id": "f8296e81-6d5b-4a5e-9de4-9d60459a1997",
+      "firstName": "Yugesh",
+      "lastName": "Jain",
+      "email": "yugesh@mutualmobile.com",
+      "modifiedTime": "Sat Jun 04 12:03:52 UTC 2022",
+      "orgId": "151d11a3-780d-4f03-bbad-889bd3707b02",
+      "harvestOrganization": {
+         "name": "mmt",
+         "website": "mmt.com",
+         "id": "151d11a3-780d-4f03-bbad-889bd3707b02",
+         "identifier": "com.mmt.org"
+      }
+   }
+}
+```
+
+| param               | type                  | Description                                           |
+|:--------------------|:----------------------|:------------------------------------------------------|
+| message             | `String`              | Returns info for every type of request.               |
+| data                | `Data`                | Details of the User Just Signed Up                    |
+| id                  | `String`              | Auto Generated Unique ID assigned to a User           |
+| firstName           | `String`              | First Name of the User Just Signed Up                 |
+| lastName            | `String`              | Last Name of the User Just Signed Up                  |
+| email               | `String`              | Email of the User Just Signed Up                      |
+| modifiedTime        | `String`              | Time of successful Signup                             |
+| orgId               | `String`              | Auto Generated Unique ID assigned to the Organization |
+| harvestOrganization | `HarvestOrganization` | Organization Details                                  |
+| name                | `String`              | User's Organization Name                              |
+| website             | `String`              | Auto Generated Unique ID assigned to the Organization |
+| id                  | `String`              | Returns info for every type of request.               |
+| identifier          | `String`              | Unique Identifier for the Organization                |
+
+
+### Logout User
+---------------------------
+
+### Change Password
+---------------------------
+
+### Get User
+---------------------------
+
+### Update User
+---------------------------
+
+### Fcm Token
+---------------------------
+
+### Refresh Token
 ---------------------------
