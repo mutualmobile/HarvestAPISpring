@@ -56,18 +56,12 @@ project.
 --------------------- 
 
 - [Auth Api](#auth-api)
-- [Login User](#-login-user)
-- [Get Organization]
-- Sign In
-- Sign Up
-- Create Organization
-- Update Organization
-- Read Organization
-- Delete Organization
-- Assign Users
-- Assign Project to Users
-- Time Recording Start/Stop
-- Delete User
+- [Forgot Password Api](#forgot-password-api)
+- [Organization Api](#organization-api)
+- [Organization Projects Api](#organization-projects-api)
+- [Organization Users Api](#organization-users-api)
+- [User project Api](#user-project-api)
+- [User Work Api](#user-work-api)
 
 ### Auth Api
 - [Login User](#-login-user)
@@ -78,6 +72,31 @@ project.
 - [Update User](#-update-user)
 - [Fcm Token](#-fcm-token)
 - [Refresh Token](#-refresh-token)
+
+### Forgot Password Api
+- [Forgot Password]
+- [Reset Password]
+
+### Organization Api
+- [Find Organization By Identifier]
+
+### Organization Projects Api
+- [Create Project]
+- [Update Project]
+- [Delete Project]
+- [Find Projects In Organization]
+- [List of Users in a Project]
+
+### Organization Users Api
+- [Find Users in Organization]
+
+### User project Api
+- [Assign Projects to User]
+- [Log Work Time]
+- [Get Projects Assigned to a user]
+
+### User Work Api
+- [Get Work Logs for a Date Range]
 
 
 ### Login User
@@ -120,6 +139,7 @@ POST BASE_URL/api/v1/public/login
 | param        | type     | Description                                                                           |
 |:-------------|:---------|:--------------------------------------------------------------------------------------|
 | message      | `String` | Returns info for every type of request.                                               |
+
 
 
 ### Register User
@@ -169,14 +189,14 @@ POST BASE_URL/api/v1/public/signup
 }
 ```
 
-| param     | type                  | Description                                             |
-|:----------|:----------------------|:--------------------------------------------------------|
-| email     | `String`              | Users official email id.                                |
-| password  | `String`              | Password, which user set while sign up.                 |
-| firstName | `String`              | First Name of the user Signing Up                       |
-| lastName  | `String`              | Last Name of the user Signing Up                        |
-| orgId     | `String`              | Auto Generated Unique ID assigned to the Organization   |
-| role      | `String`              | Role of user in the organization like Admin or employee |
+| param     | type                  | Description                                                    |
+|:----------|:----------------------|:---------------------------------------------------------------|
+| email     | `String`              | Users official email id.                                       |
+| password  | `String`              | Password, which user set while sign up.                        |
+| firstName | `String`              | First Name of the user Signing Up                              |
+| lastName  | `String`              | Last Name of the user Signing Up                               |
+| orgId     | `String`              | Auto Generated Unique ID assigned to the Organization          |
+| role      | `String`              | Role of user in the organization like Admin or normal employee |
 
 
 **Response**
@@ -229,6 +249,7 @@ POST BASE_URL/api/v1/public/signup
 | message      | `String` | Returns info for every type of request.                                               |
 
 
+
 ### Logout User
 ---------------------------
 ```HTTP
@@ -243,7 +264,7 @@ POST BASE_URL/api/v1/logout
 
 **Authorization**
 ```ts
-   BearerToekn: String
+   BearerToken: String
 ```
 
 | param        | type                  | Description                                                                           |
@@ -275,10 +296,11 @@ POST BASE_URL/api/v1/logout
 | message      | `String` | Returns info for every type of request.                                               |
 
 
+
 ### Change Password
 ---------------------------
 ```HTTP
-POST BASE_URL/api/v1/logout
+POST BASE_URL/api/v1/changePassword
 ```
 **Request Body**
 ```ts
@@ -290,7 +312,7 @@ POST BASE_URL/api/v1/logout
 
 **Authorization**
 ```ts
-   BearerToekn: String
+   BearerToken: String
 ```
 
 | param        | type                  | Description                                                                           |
@@ -322,14 +344,240 @@ POST BASE_URL/api/v1/logout
 |:-------------|:---------|:--------------------------------------------------------------------------------------|
 | message      | `String` | Returns info for every type of request.                                               |
 
+
+
 ### Get User
 ---------------------------
+```HTTP
+GET BASE_URL/api/v1/user
+```
+**Request Body**
+```ts
+   No Body
+```
+**Authorization**
+```ts
+   BearerToken: String
+```
+
+| param        | type                  | Description                                                                           |
+|:-------------|:----------------------|:--------------------------------------------------------------------------------------|
+| Bearer Token | `String`              | JWT Token for security purpose. This get generated once users Logged In Successfully. |
+
+
+**Response**
+1. When -> 200 OK : Password Changed
+```ts
+{
+   "message": String
+}
+```
+| param               | type                  | Description                                           |
+|:--------------------|:----------------------|:------------------------------------------------------|
+| message             | `String`              | Returns info for every type of request.               |
+
+2. When -> 400 BAD REQUEST
+```ts
+{
+  "message": "ERROR"
+}
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| message      | `String` | Returns info for every type of request.                                               |
+
+
 
 ### Update User
 ---------------------------
+```HTTP
+PUT BASE_URL/api/v1/user
+```
+**Request Body**
+```ts
+{
+   "id": "f8296e81-6d5b-4a5e-9de4-9d60459a1997",
+   "firstName": "Yugesh",
+   "lastName": "Jain",
+   "email": "yugesh@mutualmobile.com",
+   "orgId": "151d11a3-780d-4f03-bbad-889bd3707b02",
+   "role": String,
+   "pushToken": String,
+   "profilePic": String,
+   "harvestOrganization": {
+      "name": "mmt",
+      "website": "mmt.com",
+      "id": "151d11a3-780d-4f03-bbad-889bd3707b02",
+      "identifier": "com.mmt.org"
+   }
+}]
+```
+
+**Authorization**
+```ts
+   BearerToken: String
+```
+
+| param               | type                  | Description                                                                           |
+|:--------------------|:----------------------|:--------------------------------------------------------------------------------------|
+| id                  | `String`              | Auto Generated Unique ID assigned to a User                                           |
+| firstName           | `String`              | First Name of the User Just Signed Up                                                 |
+| lastName            | `String`              | Last Name of the User Just Signed Up                                                  |
+| email               | `String`              | Email of the User Just Signed Up                                                      |
+| orgId               | `String`              | Auto Generated Unique ID assigned to the Organization                                 |
+| role                | `String`              | Role of user in the organization like Admin or normal employee                        |
+| pushToken           | `String`              | Auto Generated Unique ID assigned to the User                                         |
+| profilePic          | `String`              | Url to the Uploaded Profile Picture                                                   |
+| harvestOrganization | `HarvestOrganization` | Organization Details                                                                  |
+| name                | `String`              | User's Organization Name                                                              |
+| website             | `String`              | Auto Generated Unique ID assigned to the Organization                                 |
+| id                  | `String`              | Returns info for every type of request.                                               |
+| identifier          | `String`              | Unique Identifier for the Organization                                                |
+| BearerToken         | `String`              | JWT Token for security purpose. This get generated once users Logged In Successfully. |
+
+
+**Response**
+1. When -> 200 OK : Password Changed
+```ts
+{
+   "message": String
+}
+```
+| param               | type                  | Description                                           |
+|:--------------------|:----------------------|:------------------------------------------------------|
+| message             | `String`              | Returns info for every type of request.               |
+
+2. When -> 400 BAD REQUEST
+```ts
+{
+  "message": "ERROR"
+}
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| message      | `String` | Returns info for every type of request.                                               |
+
+
 
 ### Fcm Token
 ---------------------------
+```HTTP
+POST BASE_URL/api/v1/fcmToken
+```
+**Request Body**
+```ts
+{
+   "id": "f8296e81-6d5b-4a5e-9de4-9d60459a1997",
+   "firstName": "Yugesh",
+   "lastName": "Jain",
+   "email": "yugesh@mutualmobile.com",
+   "orgId": "151d11a3-780d-4f03-bbad-889bd3707b02",
+   "role": String,
+   "pushToken": String,
+   "profilePic": String,
+   "harvestOrganization": {
+      "name": "mmt",
+      "website": "mmt.com",
+      "id": "151d11a3-780d-4f03-bbad-889bd3707b02",
+      "identifier": "com.mmt.org"
+   }
+}]
+```
+
+**Authorization**
+```ts
+   BearerToken: String
+```
+
+| param               | type                  | Description                                                                           |
+|:--------------------|:----------------------|:--------------------------------------------------------------------------------------|
+| id                  | `String`              | Auto Generated Unique ID assigned to a User                                           |
+| firstName           | `String`              | First Name of the User Just Signed Up                                                 |
+| lastName            | `String`              | Last Name of the User Just Signed Up                                                  |
+| email               | `String`              | Email of the User Just Signed Up                                                      |
+| orgId               | `String`              | Auto Generated Unique ID assigned to the Organization                                 |
+| role                | `String`              | Role of user in the organization like Admin or normal employee                        |
+| pushToken           | `String`              | Auto Generated Unique ID assigned to the User                                         |
+| profilePic          | `String`              | Url to the Uploaded Profile Picture                                                   |
+| harvestOrganization | `HarvestOrganization` | Organization Details                                                                  |
+| name                | `String`              | User's Organization Name                                                              |
+| website             | `String`              | Auto Generated Unique ID assigned to the Organization                                 |
+| id                  | `String`              | Returns info for every type of request.                                               |
+| identifier          | `String`              | Unique Identifier for the Organization                                                |
+| BearerToken         | `String`              | JWT Token for security purpose. This get generated once users Logged In Successfully. |
+
+**Response**
+
+1. When -> 200 OK
+```ts
+{
+  "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhNTA1MjYwZi03YmZhLTRiZDUtODBjZS04MDBmOGE0M2IzZmMiLCJpYXQiOjE2NTM5Mzg2NzUsImV4cCI6MTY1Mzk0MjI3NX0.1CydFVIwoWq4gaqUhhEBy9XpQVaed-XW0s9qn0uFkUIg4h3WXiQkZrYUqULU0ZxeFMX1jfEMqO9FtTwt3zD5Zw",
+  "message": "User logged in Successfully",
+  "refreshToken": "958ede86-163c-4e80-8d8f-ed81ff1d7421"
+}
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| token        | `String` | JWT Token for security purpose. This get generated once users Logged In Successfully. |
+| message      | `String` | Returns info for every type of request.                                               |
+| refreshToken | `String` | Unique Token for each user                                                            |
+
+2. When -> 400 BAD REQUEST
+```ts
+{
+  "message": "ERROR"
+}
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| message      | `String` | Returns info for every type of request.                                               |
+
+
 
 ### Refresh Token
 ---------------------------
+```HTTP
+POST BASE_URL/api/v1/refreshToken
+```
+**Request Body**
+```ts
+{
+   "refreshToken": String,
+}
+```
+
+| param        | type     | Description                |
+|:-------------|:---------|:---------------------------|
+| refreshToken | `String` | Unique Token for each user |
+
+**Response**
+
+1. When -> 200 OK
+```ts
+{
+  "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhNTA1MjYwZi03YmZhLTRiZDUtODBjZS04MDBmOGE0M2IzZmMiLCJpYXQiOjE2NTM5Mzg2NzUsImV4cCI6MTY1Mzk0MjI3NX0.1CydFVIwoWq4gaqUhhEBy9XpQVaed-XW0s9qn0uFkUIg4h3WXiQkZrYUqULU0ZxeFMX1jfEMqO9FtTwt3zD5Zw",
+  "message": "User logged in Successfully",
+  "refreshToken": "958ede86-163c-4e80-8d8f-ed81ff1d7421"
+}
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| token        | `String` | JWT Token for security purpose. This get generated once users Logged In Successfully. |
+| message      | `String` | Returns info for every type of request.                                               |
+| refreshToken | `String` | Unique Token for each user                                                            |
+
+2. When -> 400 BAD REQUEST
+```ts
+{
+  "message": "ERROR"
+}
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| message      | `String` | Returns info for every type of request.                                               |
