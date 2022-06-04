@@ -344,12 +344,29 @@ GET BASE_URL/api/v1/user
 1. When -> 200 OK : Password Changed
 ```ts
 {
-   "message": String
+   "message": String,
+   "data":{
+      "email": String,
+      "firstName": String,
+      "id": String,
+      "lastName": String,
+      "modifiedTime": String,
+      "orgId": String,
+      "role": String
+   }   
 }
 ```
-| param               | type                  | Description                                           |
-|:--------------------|:----------------------|:------------------------------------------------------|
-| message             | `String`              | Returns info for every type of request.               |
+| param        | type                  | Description                                           |
+|:-------------|:----------------------|:------------------------------------------------------|
+| message      | `String`              | Returns info for every type of request.               |
+| data         | `Data`                | Details of the User Just Signed Up                    |
+| id           | `String`              | Auto Generated Unique ID assigned to a User           |
+| firstName    | `String`              | First Name of the User Just Signed Up                 |
+| lastName     | `String`              | Last Name of the User Just Signed Up                  |
+| email        | `String`              | Email of the User Just Signed Up                      |
+| modifiedTime | `String`              | Time of successful Signup                             |
+| orgId        | `String`              | Auto Generated Unique ID assigned to the Organization |
+| role         | `String`              | Role of the user in the Organization                  |
 
 2. When -> 400 BAD REQUEST
 ```ts
@@ -571,9 +588,7 @@ POST BASE_URL/api/v1/public/forgotPassword
 ```
 **Parameters**
 ```ts
-{
    email: String
-}
 ```
 
 | param | type     | Description                                                          |
@@ -662,9 +677,7 @@ GET BASE_URL/api/v1/public/organization
 ```
 **Parameters**
 ```ts
-{
    identifier: String
-}
 ```
 
 | param      | type     | Description                            |
@@ -710,11 +723,316 @@ GET BASE_URL/api/v1/public/organization
 
 
 ### Organization Projects Api
-- [Create Project]
-- [Update Project]
-- [Delete Project]
-- [Find Projects In Organization]
-- [List of Users in a Project]
+- [Create Project](#-create-project)
+- [Update Project](#-update-project)
+- [Delete Project](#-delete-project)
+- [Find Projects In Organization](#-find-projects-in-organization)
+- [List of Users in a Project](#-list-of-users-in-a-project)
+
+
+--------------
+### Create Project
+--------------
+```HTTP
+GET BASE_URL/api/v1/organization/project
+```
+**Request Body**
+```ts
+{
+   "name": String,
+   "client": String,
+   "isIndefinite": Boolean,
+   "startDate": String,
+   "endDate": String
+}
+```
+**Authorization**
+```ts
+   BearerToken: String
+```
+
+| param        | type      | Description                                                                           |
+|:-------------|:----------|:--------------------------------------------------------------------------------------|
+| name         | `String`  | Name of the project to be created                                                     |
+| client       | `String`  | Name of the client who's project is thisClient                                        |
+| isIndefinite | `Boolean` | Is the project indefinite or not                                                      |
+| startDate    | `String`  | Start date of the Project                                                             |
+| endDate      | `String`  | End date of the Project                                                               |
+| Bearer Token | `String`  | JWT Token for security purpose. This get generated once users Logged In Successfully. |
+
+**Response**
+
+1. When -> 200 OK
+```ts
+{
+   "message": String
+   "data": {
+      "id": String,
+      "name": String,
+      "client": String,
+      "isIndefinite": Boolean,
+      "startDate": String,
+      "endDate": String,
+      "organizationId": String
+   }
+}
+```
+
+| param        | type      | Description                                                           |
+|:-------------|:----------|:----------------------------------------------------------------------|
+| message      | `String`  | Returns info for every type of request.                               |
+| id           | `String`  | Unique Auto generated Id for the project                              |
+| name         | `String`  | Name of the project to be created                                     |
+| client       | `String`  | Name of the client who's project is thisClient                        |
+| isIndefinite | `Boolean` | Is the project indefinite or not                                      |
+| startDate    | `String`  | Start date of the Project                                             |
+| endDate      | `String`  | End date of the Project                                               |
+| orgId        | `String`  | Unique Auto generated Organization Id in which the project is created |
+
+2. When -> 400 BAD REQUEST
+```ts
+{
+  "message": "ERROR"
+}
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| message      | `String` | Returns info for every type of request.                                               |
+
+
+
+--------------
+### Update Project
+--------------
+```HTTP
+PUT BASE_URL/api/v1/organization/project
+```
+**Request Body**
+```ts
+{
+   "id": String,
+   "name": String,
+   "client": String,
+   "isIndefinite": Boolean,
+   "startDate": String,
+   "endDate": String,
+   "organizationId": String
+}
+```
+**Authorization**
+```ts
+   BearerToken: String
+```
+
+| param          | type      | Description                                                                           |
+|:---------------|:----------|:--------------------------------------------------------------------------------------|
+| id             | `String`  | Unique Auto generated Id for the project                                              |
+| name           | `String`  | Name of the project to be created                                                     |
+| client         | `String`  | Name of the client who's project is thisClient                                        |
+| isIndefinite   | `Boolean` | Is the project indefinite or not                                                      |
+| startDate      | `String`  | Start date of the Project                                                             |
+| endDate        | `String`  | End date of the Project                                                               |
+| organizationId | `String`  | Unique Auto generated Organization Id in which the project is created                 |
+| Bearer Token   | `String`  | JWT Token for security purpose. This get generated once users Logged In Successfully. |
+
+**Response**
+
+1. When -> 200 OK
+```ts
+{
+   "message": String
+}
+```
+
+| param        | type     | Description                             |
+|:-------------|:---------|:----------------------------------------|
+| message      | `String` | Returns info for every type of request. |
+
+2. When -> 400 BAD REQUEST
+```ts
+{
+  "message": "ERROR"
+}
+```
+
+| param        | type     | Description                             |
+|:-------------|:---------|:----------------------------------------|
+| message      | `String` | Returns info for every type of request. |
+
+
+
+--------------
+### Delete Project
+--------------
+```HTTP
+DELETE BASE_URL/api/v1/organization/project
+```
+**Parameters**
+```ts
+   projectId: String
+```
+**Authorization**
+```ts
+   BearerToken: String
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| projectId    | `String` | Unique Auto generated Id for the project                                              |
+| Bearer Token | `String` | JWT Token for security purpose. This get generated once users Logged In Successfully. |
+
+**Response**
+
+1. When -> 200 OK
+```ts
+{
+   "message": String
+}
+```
+| param        | type     | Description                             |
+|:-------------|:---------|:----------------------------------------|
+| message      | `String` | Returns info for every type of request. |
+
+2. When -> 400 BAD REQUEST
+```ts
+{
+  "message": "ERROR"
+}
+```
+| param        | type     | Description                             |
+|:-------------|:---------|:----------------------------------------|
+| message      | `String` | Returns info for every type of request. |
+
+
+
+--------------
+### Find Projects In Organization
+--------------
+```HTTP
+GET BASE_URL/api/v1/public/organization/project
+```
+**Parameters**
+```ts
+   orgId: String,
+   offset: Int,
+   limit: Int,
+   search: String
+```
+```ts
+   BearerToken: String
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| orgId        | `String` | Unique Auto generated Organization Id in which the project is created                 |
+| offSet       | `String` | Offset                                                                                |
+| limit        | `String` | Limit per Page                                                                        |
+| search       | `String` | Name of the project you want to search in the searchbar                               |
+| Bearer Token | `String` | JWT Token for security purpose. This get generated once users Logged In Successfully. |
+
+**Response**
+
+1. When -> 200 OK
+```ts
+{
+   "message": String
+   "data": [
+      {
+         "id": String,
+         "name": String,
+         "client": String,
+         "isIndefinite": Boolean,
+         "startDate": String,
+         "endDate": String,
+         "organizationId": String
+      }
+   ]
+}
+```
+
+| param          | type      | Description                                                           |
+|:---------------|:----------|:----------------------------------------------------------------------|
+| message        | `String`  | Returns info for every type of request.                               |
+| id             | `String`  | Unique Auto generated Id for the project                              |
+| name           | `String`  | Name of the project to be created                                     |
+| client         | `String`  | Name of the client who's project is thisClient                        |
+| isIndefinite   | `Boolean` | Is the project indefinite or not                                      |
+| startDate      | `String`  | Start date of the Project                                             |
+| endDate        | `String`  | End date of the Project                                               |
+| organizationId | `String`  | Unique Auto generated Organization Id in which the project is created |
+
+2. When -> 400 BAD REQUEST
+```ts
+{
+  "message": "ERROR"
+}
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| message      | `String` | Returns info for every type of request.                                               |
+
+
+
+--------------
+### List of users in a Project
+--------------
+```HTTP
+GET BASE_URL/api/v1/organization/project/list-users
+```
+**Parameters**
+```ts
+   projectId: String
+```
+
+| param     | type     | Description                              |
+|:----------|:---------|:-----------------------------------------|
+| projectId | `String` | Unique Auto generated Id for the project |
+
+**Response**
+
+1. When -> 200 OK
+```ts
+{
+   "message": String
+   "data": [
+      {
+         "email": String,
+         "firstName": String,
+         "id": String,
+         "lastName": String,
+         "modifiedTime": String,
+         "orgId": String,
+         "role": String
+      }
+   ]
+}
+```
+| param        | type                  | Description                                           |
+|:-------------|:----------------------|:------------------------------------------------------|
+| message      | `String`              | Returns info for every type of request.               |
+| data         | `Data`                | Details of the User Just Signed Up                    |
+| id           | `String`              | Auto Generated Unique ID assigned to a User           |
+| firstName    | `String`              | First Name of the User Just Signed Up                 |
+| lastName     | `String`              | Last Name of the User Just Signed Up                  |
+| email        | `String`              | Email of the User Just Signed Up                      |
+| modifiedTime | `String`              | Time of successful Signup                             |
+| orgId        | `String`              | Auto Generated Unique ID assigned to the Organization |
+| role         | `String`              | Role of the user in the Organization                  |
+
+2. When -> 400 BAD REQUEST
+```ts
+{
+  "message": "ERROR"
+}
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| message      | `String` | Returns info for every type of request.                                               |
+
+
 
 ### Organization Users Api
 - [Find Users in Organization]
