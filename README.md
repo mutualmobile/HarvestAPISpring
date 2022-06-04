@@ -86,9 +86,6 @@ project.
 ```HTTP
 POST BASE_URL/api/v1/public/login
 ```
-
-200 OK : LogIn the user, Successfully.
-
 **Request Body**
 
 | param    | type     | Description                             |
@@ -98,6 +95,7 @@ POST BASE_URL/api/v1/public/login
 
 **Response**
 
+1. When -> 200 OK
 ```ts
 {
   "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhNTA1MjYwZi03YmZhLTRiZDUtODBjZS04MDBmOGE0M2IzZmMiLCJpYXQiOjE2NTM5Mzg2NzUsImV4cCI6MTY1Mzk0MjI3NX0.1CydFVIwoWq4gaqUhhEBy9XpQVaed-XW0s9qn0uFkUIg4h3WXiQkZrYUqULU0ZxeFMX1jfEMqO9FtTwt3zD5Zw",
@@ -112,15 +110,24 @@ POST BASE_URL/api/v1/public/login
 | message      | `String` | Returns info for every type of request.                                               |
 | refreshToken | `String` | Unique Token for each user                                                            |
 
+2. When -> 400 BAD REQUEST
+```ts
+{
+  "message": "ERROR"
+}
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| message      | `String` | Returns info for every type of request.                                               |
+
+
 ### Register User
 ---------------------------
 
 ```HTTP
 POST BASE_URL/api/v1/public/signup
 ```
-
-200 OK : Registration Successful! Please verify your email before getting started!
-400 BAD REQUEST : An account with this email address already exist
 
 **Request Body**
 
@@ -173,6 +180,8 @@ POST BASE_URL/api/v1/public/signup
 
 
 **Response**
+
+1. When -> 200 OK : Registration Successful! Please verify your email before getting started!
 ```ts
 {
    "message": "Registration Successful! Please verify your email before getting started!",
@@ -208,15 +217,23 @@ POST BASE_URL/api/v1/public/signup
 | id                  | `String`              | Returns info for every type of request.               |
 | identifier          | `String`              | Unique Identifier for the Organization                |
 
+2. When -> 400 BAD REQUEST
+```ts
+{
+  "message": "ERROR"
+}
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| message      | `String` | Returns info for every type of request.                                               |
+
 
 ### Logout User
 ---------------------------
 ```HTTP
 POST BASE_URL/api/v1/logout
 ```
-200 OK : Registration Successful! Please verify your email before getting started!
-400 BAD REQUEST : An account with this email address already exist
-
 **Request Body**
 ```ts
 {
@@ -236,6 +253,7 @@ POST BASE_URL/api/v1/logout
 
 
 **Response**
+1. When -> 200 OK : Registration Successful! Please verify your email before getting started!
 ```ts
 {
    "message": "Logged Out Successfully!!"
@@ -245,9 +263,64 @@ POST BASE_URL/api/v1/logout
 |:--------------------|:----------------------|:------------------------------------------------------|
 | message             | `String`              | Returns info for every type of request.               |
 
+2. When -> 400 BAD REQUEST
+```ts
+{
+  "message": "ERROR"
+}
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| message      | `String` | Returns info for every type of request.                                               |
+
 
 ### Change Password
 ---------------------------
+```HTTP
+POST BASE_URL/api/v1/logout
+```
+**Request Body**
+```ts
+{
+    "password": String,
+    "oldPassword": String
+}
+```
+
+**Authorization**
+```ts
+   BearerToekn: String
+```
+
+| param        | type                  | Description                                                                           |
+|:-------------|:----------------------|:--------------------------------------------------------------------------------------|
+| password     | `String`              | Existing Password of the account Logged in                                            |
+| oldPassword  | `String`              | New Password that we want to set for the account Logged in                            |
+| Bearer Token | `String`              | JWT Token for security purpose. This get generated once users Logged In Successfully. |
+
+
+**Response**
+1. When -> 200 OK : Password Changed
+```ts
+{
+   "message": String
+}
+```
+| param               | type                  | Description                                           |
+|:--------------------|:----------------------|:------------------------------------------------------|
+| message             | `String`              | Returns info for every type of request.               |
+
+2. When -> 400 BAD REQUEST
+```ts
+{
+  "message": "ERROR"
+}
+```
+
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| message      | `String` | Returns info for every type of request.                                               |
 
 ### Get User
 ---------------------------
