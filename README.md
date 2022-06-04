@@ -84,7 +84,7 @@ project.
 --------------
 
 ```HTTP
-POST BASE_URL/login
+POST BASE_URL/api/v1/public/login
 ```
 
 200 OK : LogIn the user, Successfully.
@@ -116,16 +116,15 @@ POST BASE_URL/login
 ---------------------------
 
 ```HTTP
-POST BASE_URL/signup
+POST BASE_URL/api/v1/public/signup
 ```
 
-
-For Existing Organization User SignUp ->
 200 OK : Registration Successful! Please verify your email before getting started!
 400 BAD REQUEST : An account with this email address already exist
 
 **Request Body**
 
+1. For New Organization User SignUp ->
 ```ts
 {
     "email":"yugesh@mutualmobile.com",
@@ -139,7 +138,6 @@ For Existing Organization User SignUp ->
     }
 }
 ```
-
 | param               | type                  | Description                             |
 |:--------------------|:----------------------|:----------------------------------------|
 | email               | `String`              | Users official email id.                |
@@ -151,8 +149,30 @@ For Existing Organization User SignUp ->
 | website             | `String`              | Web Address for the Organization        |
 | identifier          | `String`              | Unique Identifier for the Organization  |
 
-**Response**
 
+2. For Existing Organization User SignUp ->
+```ts
+{
+    "email":"yugesh@mutualmobile.com",
+    "password":"password",
+    "firstName":"Yugesh",
+    "lastName":"Jain",
+    "orgId": "151d11a3-780d-4f03-bbad-889bd3707b02",
+    "role": String,
+}
+```
+
+| param     | type                  | Description                                             |
+|:----------|:----------------------|:--------------------------------------------------------|
+| email     | `String`              | Users official email id.                                |
+| password  | `String`              | Password, which user set while sign up.                 |
+| firstName | `String`              | First Name of the user Signing Up                       |
+| lastName  | `String`              | Last Name of the user Signing Up                        |
+| orgId     | `String`              | Auto Generated Unique ID assigned to the Organization   |
+| role      | `String`              | Role of user in the organization like Admin or employee |
+
+
+**Response**
 ```ts
 {
    "message": "Registration Successful! Please verify your email before getting started!",
@@ -172,7 +192,6 @@ For Existing Organization User SignUp ->
    }
 }
 ```
-
 | param               | type                  | Description                                           |
 |:--------------------|:----------------------|:------------------------------------------------------|
 | message             | `String`              | Returns info for every type of request.               |
@@ -192,6 +211,40 @@ For Existing Organization User SignUp ->
 
 ### Logout User
 ---------------------------
+```HTTP
+POST BASE_URL/api/v1/logout
+```
+200 OK : Registration Successful! Please verify your email before getting started!
+400 BAD REQUEST : An account with this email address already exist
+
+**Request Body**
+```ts
+{
+    "userId": String
+}
+```
+
+**Authorization**
+```ts
+   BearerToekn: String
+```
+
+| param        | type                  | Description                                                                           |
+|:-------------|:----------------------|:--------------------------------------------------------------------------------------|
+| userId       | `String`              | Auto Generated Unique ID assigned to a User                                           |
+| Bearer Token | `String`              | JWT Token for security purpose. This get generated once users Logged In Successfully. |
+
+
+**Response**
+```ts
+{
+   "message": "Logged Out Successfully!!"
+}
+```
+| param               | type                  | Description                                           |
+|:--------------------|:----------------------|:------------------------------------------------------|
+| message             | `String`              | Returns info for every type of request.               |
+
 
 ### Change Password
 ---------------------------
