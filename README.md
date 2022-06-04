@@ -1,14 +1,14 @@
 # Harvest API
 
 This repo showcase API development using Spring-Boot Technology stack using pure Kotlin.
-Currently, the API's are in WIP and being used in this [HarvestKMM]("https://github.com/mutualmobile/HarvestTimeKMP)
+Currently, the APIs are in WIP and being used in this [HarvestKMM]("https://github.com/mutualmobile/HarvestTimeKMP)
 project.
 
 **Servers**
 
-| Name       | URL                 | Description                                                                                                                                                                                                        |
-| :--------- | :------------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Production | WIP    | The public API server                                                                                                                                                                                              |
+| Name       | URL                                            | Description                                                                       |
+|:-----------|:-----------------------------------------------|:----------------------------------------------------------------------------------|
+| Production | WIP                                            | The public API server                                                             |
 | Staging    | https://harvestkmp.mmharvest.com/api/v1/public | The master branch automatically deploys to the staging server after every commit. |
 
 # Contents
@@ -17,7 +17,7 @@ project.
 - [Spring Framework](#-spring-frameworks-used)
 - [Prerequisite](#-prerequisite)
 - [TODO](#-todo)
-- [API References](#api-references)
+- [API References](#-api-references)
 
 ## Getting started
 -----------
@@ -55,9 +55,9 @@ project.
 # API References
 --------------------- 
 
-- [Auth Api](#-auth-api)
+- [Auth Api](#auth-api)
 - [Login User](#-login-user)
-- [Get Organization](#-signup-user)
+- [Get Organization]
 - Sign In
 - Sign Up
 - Create Organization
@@ -70,15 +70,14 @@ project.
 - Delete User
 
 ### Auth Api
---------------
--[Login User](#-login-user)
--[Register User / SignUp User](#-register-user)
--[Logout user](#-logout-user)
--[Change Password](#-change-password)
--[Get User](#-get-user)
--[Update User](#-update-user)
--[Fcm Token](#-fcm-token)
--[Refresh Token](#-refresh-token)
+- [Login User](#-login-user)
+- [Register User / SignUp User](#-register-user)
+- [Logout user](#-logout-user)
+- [Change Password](#-change-password)
+- [Get User](#-get-user)
+- [Update User](#-update-user)
+- [Fcm Token](#-fcm-token)
+- [Refresh Token](#-refresh-token)
 
 
 ### Login User
@@ -92,12 +91,12 @@ POST BASE_URL/login
 
 **Request Body**
 
-| param     | type     | Description                                                                                                                                                                                                                                                                                                                          |
-| :-------- | :------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Email  | `String`    | Users official email id.                                                                                                                                                                                                                                                              |
-| Password | `String`    | Password, which user set while sign up.                                                                                                                                                                                                                                                               |
+| param    | type     | Description                             |
+|:---------|:---------|:----------------------------------------|
+| Email    | `String` | Users official email id.                |
+| Password | `String` | Password, which user set while sign up. |
 
-** Response **
+**Response**
 
 ```ts
 {
@@ -107,11 +106,11 @@ POST BASE_URL/login
 }
 ```
 
-| param     | type     | Description                                                                                                                                                                                                                                                                                                                          |
-| :-------- | :------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| token | `String`    | JWT Token for security purpose. This get generated once users Logged In Successfully.                                                                                                                                                                                                                                                                 |
-| message | `String`    | Returns info for every type of request.                                                                                                                                                                                                                                                        |
-| refreshToken  | `String` | Unique Token for each user                                                                                                                                                                                                                                       |  |
+| param        | type     | Description                                                                           |
+|:-------------|:---------|:--------------------------------------------------------------------------------------|
+| token        | `String` | JWT Token for security purpose. This get generated once users Logged In Successfully. |
+| message      | `String` | Returns info for every type of request.                                               |
+| refreshToken | `String` | Unique Token for each user                                                            |
 
 ### Register User
 ---------------------------
@@ -119,6 +118,7 @@ POST BASE_URL/login
 ```HTTP
 POST BASE_URL/signup
 ```
+
 
 For Existing Organization User SignUp ->
 200 OK : Registration Successful! Please verify your email before getting started!
