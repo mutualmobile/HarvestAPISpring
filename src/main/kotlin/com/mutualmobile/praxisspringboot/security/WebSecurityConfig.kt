@@ -1,6 +1,9 @@
 package com.mutualmobile.praxisspringboot.security
 
 import com.mutualmobile.praxisspringboot.controllers.Endpoint
+import com.mutualmobile.praxisspringboot.controllers.Endpoint.ORGANIZATION
+import com.mutualmobile.praxisspringboot.controllers.Endpoint.TIME_ENTRIES
+import com.mutualmobile.praxisspringboot.controllers.Endpoint.UN_AUTH_API
 import com.mutualmobile.praxisspringboot.security.jwt.JwtRequestFilter
 import com.mutualmobile.praxisspringboot.services.user.PraxisUserService
 import com.mutualmobile.praxisspringboot.util.Utility
@@ -91,7 +94,10 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             )
             .permitAll()
             //user specific api's
-            .antMatchers(HttpMethod.GET, "${Endpoint.USER}/**")
+            .antMatchers(
+                HttpMethod.GET,
+                "${Endpoint.USER}/**",
+            )
             .hasAnyAuthority(UserRole.HARVEST_SUPER_ADMIN.role, UserRole.ORG_ADMIN.role, UserRole.ORG_USER.role)
             .antMatchers(
                 HttpMethod.POST,
@@ -104,15 +110,36 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .antMatchers(HttpMethod.GET, "${Endpoint.NOTIFICATIONS}/**", "${Endpoint.NOTIFICATION_COUNT}/**")
             .hasAnyAuthority(UserRole.HARVEST_SUPER_ADMIN.role, UserRole.ORG_ADMIN.role, UserRole.ORG_USER.role)
             // get time entries enabled for any user role
-            .antMatchers(HttpMethod.GET, "${Endpoint.TIME_ENTRIES}/**")
-            .hasAnyAuthority(UserRole.HARVEST_SUPER_ADMIN.role, UserRole.ORG_ADMIN.role, UserRole.ORG_USER.role)
-            .antMatchers(HttpMethod.POST,"${Endpoint.ORGANIZATION}/**")
-            .hasAnyAuthority(UserRole.ORG_ADMIN.role)
-            .antMatchers(HttpMethod.PUT,"${Endpoint.ORGANIZATION}/**")
-            .hasAnyAuthority(UserRole.ORG_ADMIN.role)
-            .antMatchers(HttpMethod.GET, "${Endpoint.LIST_USERS}/**")
+            .antMatchers(HttpMethod.GET, "${TIME_ENTRIES}/**")
+            .hasAnyAuthority(
+                UserRole.HARVEST_SUPER_ADMIN.role, UserRole.ORG_ADMIN.role, UserRole.ORG_USER.role
+            )
+            .antMatchers(HttpMethod.POST, "${ORGANIZATION}/**")
+            .hasAnyAuthority(
+                UserRole.ORG_ADMIN.role
+            )
+            .antMatchers(HttpMethod.GET, "${ORGANIZATION}/**")
+            .hasAnyAuthority(
+                UserRole.ORG_ADMIN.role,
+                UserRole.ORG_USER.role,
+                UserRole.HARVEST_SUPER_ADMIN.role,
+            )
+            .antMatchers(HttpMethod.PUT, "${ORGANIZATION}/**")
+            .hasAnyAuthority(
+                UserRole.ORG_ADMIN.role
+            )
+            .antMatchers(
+                HttpMethod.GET,
+                "${Endpoint.LIST_USERS}/**",
+            )
             .hasAnyAuthority(UserRole.HARVEST_SUPER_ADMIN.role)
-            .antMatchers(HttpMethod.DELETE, "${Endpoint.DELETE_ORGANIZATION}/**")
+            .antMatchers(HttpMethod.GET, "${Endpoint.ORG_PROJECT}/**")
+            .hasAnyAuthority(
+                UserRole.ORG_ADMIN.role,
+                UserRole.ORG_USER.role,
+                UserRole.HARVEST_SUPER_ADMIN.role,
+            )
+            .antMatchers(HttpMethod.POST, "${Endpoint.ASSIGN_PROJECT}/**")
             .hasAnyAuthority(UserRole.ORG_ADMIN.role)
             .anyRequest()
             .authenticated()

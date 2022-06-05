@@ -7,22 +7,24 @@ import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.auth.RequestUserChangePassword
 import com.mutualmobile.praxisspringboot.data.user.RequestUser
 import com.mutualmobile.praxisspringboot.entities.user.DBHarvestUser
-import com.mutualmobile.praxisspringboot.security.jwt.JwtTokenUtil
 import com.mutualmobile.praxisspringboot.repositories.RoleRepository
 import com.mutualmobile.praxisspringboot.repositories.UserRepository
+import com.mutualmobile.praxisspringboot.security.jwt.JwtTokenUtil
 import com.mutualmobile.praxisspringboot.services.user.PraxisUserService
 import com.mutualmobile.praxisspringboot.services.user.UserDataService
 import com.mutualmobile.praxisspringboot.util.Utility
+import java.net.URL
+import java.util.Date
+import javax.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.servlet.view.RedirectView
-import java.net.URL
-import java.util.*
-import javax.servlet.http.HttpServletRequest
 
 
 @Service
@@ -87,7 +89,7 @@ class UserDataServiceImpl : UserDataService {
             val token = jwtTokenUtil.generateJWTToken(email)
             dbHarvestUser.resetPasswordToken = token
             userRepository.save(dbHarvestUser)
-            val resetPasswordLink = Utility.getSiteURL() + "/resetPassword?token=" + token;
+            val resetPasswordLink = Utility.getSiteURL() + "/resetPassword?token=" + token
             sendEmail(email, resetPasswordLink, it.name())
             return ResponseEntity.ok(ApiResponse(message = "We have sent a reset password link to your email. Please check."))
         } ?: run {
@@ -107,6 +109,47 @@ class UserDataServiceImpl : UserDataService {
         return RedirectView().apply {
             url = Utility.getSiteURL() + "/${response}"
         }
+    }
+
+    override fun getUsersByTypeAndOrgId(
+        userType: String,
+        orgId: String?,
+        isUserDeleted: Boolean,
+        pageable: Pageable,
+        search: String?,
+    ): ApiResponse<Pair<Int, List<RequestUser>>> {
+        return try {
+            val result = search?.takeIf { it.isNotEmpty() }?.let {
+                userRepository.findByTypeAndOrgIdAndSearch(
+                    type = userType,
+                    orgId = orgId,
+                    isUserDeleted = isUserDeleted,
+                    pageable = pageable, search
+                ).map { it.toRequestUser() }
+            } ?: run {
+                userRepository.findByTypeAndOrgId(
+                    type = userType,
+                    orgId = orgId,
+                    isUserDeleted = isUserDeleted,
+                    pageable = pageable
+                ).map { it.toRequestUser() }
+            }
+            ApiResponse(data = Pair(result.totalPages, result.content))
+        } catch (e: Exception) {
+            ApiResponse(message = e.localizedMessage ?: "Unexpected error occurred!")
+        }
+    }
+
+    override fun getUserById(userId: String): RequestUser? {
+        return userRepository.findByIdOrNull(userId)?.toRequestUser()
+    }
+
+    override fun getAllUsersById(userIds: List<String>): List<RequestUser> {
+        return userRepository.findAllById(userIds).map { it.toRequestUser() }
+    }
+
+    override fun checkIfUserExists(userId: String): Boolean {
+        return userRepository.existsById(userId)
     }
 
     override fun postResetPassword(token: String?, newPassword: String?): ResponseEntity<ApiResponse<Void>?> {
@@ -186,8 +229,6 @@ class UserDataServiceImpl : UserDataService {
         }
         return ApiResponse("User Not Found!")
     }
-
-
 }
 
 fun DBHarvestUser.toRequestUser(): RequestUser {
@@ -196,10 +237,10 @@ fun DBHarvestUser.toRequestUser(): RequestUser {
         firstName = this.firstName?.trim(),
         lastName = this.lastName?.trim(),
         email = this.email?.trim(),
-        null,
+        password = null,
         profilePic = this.avatarUrl,
         modifiedTime = this.lastModifiedTime?.toString(),
-        orgId = this.orgId
+        orgId = this.orgId,
     )
 }
 
@@ -210,6 +251,6 @@ fun RequestUser?.toDBUser(): DBHarvestUser {
         firstName = this?.firstName?.trim(),
         lastName = this?.lastName?.trim(),
         avatarUrl = this?.profilePic,
-        orgId = this?.orgId!!
+        orgId = this?.orgId!!,
     )
 }

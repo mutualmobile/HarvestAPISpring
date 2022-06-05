@@ -6,6 +6,6 @@ object Utility {
     }
 
     fun getApiBaseURL(): String {
-        return "http://mmharvestkmp.us-east-2.elasticbeanstalk.com"
+        return "https://harvestkmp.mmharvest.com"
     }
 }

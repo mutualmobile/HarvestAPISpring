@@ -1,6 +1,5 @@
 package com.mutualmobile.praxisspringboot.services.orgs.impl
 
-import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.orgs.HarvestOrganization
 import com.mutualmobile.praxisspringboot.entities.orgs.DBOrganization
 import com.mutualmobile.praxisspringboot.repositories.orgs.OrgRepository
@@ -8,9 +7,9 @@ import com.mutualmobile.praxisspringboot.services.orgs.OrganizationService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
-import org.springframework.stereotype.Service
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Service
 
 @Service
 class OrganizationServiceImpl : OrganizationService {
@@ -28,9 +27,8 @@ class OrganizationServiceImpl : OrganizationService {
         org?.let {
             val organization = orgRepository.save(
                 org.copy(
-                    name = harvestOrganization.name,
-                    website = harvestOrganization.website,
-                    imgUrl = harvestOrganization.imgUrl
+                    name = harvestOrganization.name!!,
+                    website = harvestOrganization.website!!,
                 )
             )
             return organization.toHarvestOrg()
@@ -39,8 +37,13 @@ class OrganizationServiceImpl : OrganizationService {
     }
 
     override fun findOrganization(identifier: String): HarvestOrganization? {
-        val currentOrg = orgRepository.findByIdentifierAndDeleted(identifier, false)
+        val currentOrg = orgRepository.findByIdentifierIgnoreCaseAndDeleted(identifier, false)
         return currentOrg?.toHarvestOrg()
+    }
+
+    override fun findOrganizationById(orgId: String): HarvestOrganization? {
+        val result = orgRepository.findByIdOrNull(orgId)
+        return result?.toHarvestOrg()
     }
 
     override fun deleteOrganization(organizationId: String): Boolean {
@@ -60,8 +63,8 @@ class OrganizationServiceImpl : OrganizationService {
         // TODO fetch the role of the user from jwt token
         // TODO based on role return deleted and not deleted records
         val order: Sort.Order = Sort.Order(Sort.Direction.ASC, "name")
-        search?.let {
-            return orgRepository.findAllByNameAndDeleted(
+        search?.takeIf { it.isNotEmpty() }?.let {
+            return orgRepository.findAllByNameIgnoreCaseAndDeleted(
                 search,
                 false,
                 PageRequest.of(offset, limit, Sort.by(order))
@@ -74,9 +77,9 @@ class OrganizationServiceImpl : OrganizationService {
 }
 
 private fun HarvestOrganization.toDBHarvestOrganization(): DBOrganization {
-    return DBOrganization(this.name, this.website, this.imgUrl, this.identifier)
+    return DBOrganization(this.name!!, this.website!!, this.identifier!!)
 }
 
 fun DBOrganization.toHarvestOrg(): HarvestOrganization {
-    return HarvestOrganization(this.name, this.website, this.imgUrl, this.id, this.identifier)
+    return HarvestOrganization(this.name, this.website, this.id, this.identifier)
 }

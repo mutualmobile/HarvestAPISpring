@@ -4,6 +4,7 @@ object Endpoint {
 
     private const val API_URL = "/api/v1"
     private const val ADMIN = "/admin"
+    private const val ORG_ADMIN = "/org-admin"
     const val UN_AUTH_API = "$API_URL/public"
     const val ORGANIZATIONS = "$UN_AUTH_API/organizations"
     const val UN_AUTH_ORGANISATION = "$UN_AUTH_API/organization"
@@ -20,6 +21,8 @@ object Endpoint {
     const val REFRESH_TOKEN = "$API_URL/refreshToken"
 
     const val USER = "$API_URL/user"
+    private const val USER_PROJECT = "$USER/project"
+    const val USER_ASSIGNED_PROJECTS = "$USER/assigned-projects"
 
     const val NOTIFICATIONS = "$API_URL/notifications"
     const val NOTIFICATION_COUNT = "$API_URL/notificationCount"
@@ -28,14 +31,19 @@ object Endpoint {
 
     //Org main user // TODO write security for these endpoints.
     const val ORGANIZATION = "$API_URL/organization"
-    const val ORG_USERS = "$API_URL/organization/users"
-    const val ORG_USER = "$API_URL/organization/user"
+    const val ORG_USERS = "$ORGANIZATION/users"
+    const val ORG_USER = "$ORGANIZATION/user"
+    const val ORG_PROJECT = "$ORGANIZATION/project"
     const val TIME_ENTRIES = "$API_URL/organization-project-user/times"
     const val TIME_ENTRY = "$API_URL/organization-project-user/time"
 
+    const val LIST_USERS_IN_PROJECT = "$ORG_PROJECT/list-users"
+
     //ADMIN
     const val LIST_USERS = "$API_URL$ADMIN/users"
+    const val ASSIGN_PROJECT = "$API_URL$ORG_ADMIN/assign-user-project"
 
+    const val LOG_WORK = "$USER_PROJECT/log-work"
 
     object Params {
         const val START_DATE = "startDate"
