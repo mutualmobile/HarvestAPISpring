@@ -29,7 +29,7 @@ interface OrganizationApi {
         @RequestParam(value = Endpoint.Params.ORG_IDENTIFIER, required = true) identifier: String
     ): ResponseEntity<ApiResponse<HarvestOrganization>>
 
-    @DeleteMapping(Endpoint.UN_AUTH_ORGANISATION)
+    @DeleteMapping(Endpoint.DELETE_ORGANIZATION)
     fun deleteOrganisation(
         @RequestParam(value = Endpoint.Params.ID, required = true) organisationId: String
     ): ResponseEntity<ApiResponse<Boolean>>

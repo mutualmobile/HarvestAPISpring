@@ -84,7 +84,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .antMatchers(
                 "/",
                 "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
-                "${UN_AUTH_API}/**",
+                "${Endpoint.UN_AUTH_API}/**",
                 "${Endpoint.FORGOT_PASSWORD}/**",
                 "${Endpoint.REFRESH_TOKEN}/**",
                 "${Endpoint.EMAIL_VERIFY}/**",
