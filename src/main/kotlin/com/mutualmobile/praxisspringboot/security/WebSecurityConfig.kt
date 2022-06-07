@@ -1,6 +1,8 @@
 package com.mutualmobile.praxisspringboot.security
 
 import com.mutualmobile.praxisspringboot.controllers.Endpoint
+import com.mutualmobile.praxisspringboot.controllers.Endpoint.GET_LOG_WORK
+import com.mutualmobile.praxisspringboot.controllers.Endpoint.LOG_WORK
 import com.mutualmobile.praxisspringboot.controllers.Endpoint.ORGANIZATION
 import com.mutualmobile.praxisspringboot.controllers.Endpoint.TIME_ENTRIES
 import com.mutualmobile.praxisspringboot.controllers.Endpoint.UN_AUTH_API
@@ -134,6 +136,16 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             )
             .hasAnyAuthority(UserRole.HARVEST_SUPER_ADMIN.role)
             .antMatchers(HttpMethod.GET, "${Endpoint.ORG_PROJECT}/**")
+            .hasAnyAuthority(
+                UserRole.ORG_ADMIN.role,
+                UserRole.ORG_USER.role,
+                UserRole.HARVEST_SUPER_ADMIN.role,
+            )
+            .antMatchers(HttpMethod.POST,"${LOG_WORK}/**")
+            .hasAnyAuthority(
+                UserRole.ORG_USER.role,
+            )
+            .antMatchers(HttpMethod.POST,"${GET_LOG_WORK}/**")
             .hasAnyAuthority(
                 UserRole.ORG_ADMIN.role,
                 UserRole.ORG_USER.role,
