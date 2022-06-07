@@ -6,10 +6,12 @@ import com.mutualmobile.praxisspringboot.data.models.projects.DateRangeWorkReque
 import com.mutualmobile.praxisspringboot.data.models.projects.HarvestUserWork
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 
 interface UserWorkApi {
-    @GetMapping(Endpoint.LOG_WORK)
+    @PostMapping(Endpoint.LOG_WORK)// fix this later, it should be a GET TODO
     fun getWorkLogsForDateRange(
         @RequestBody dateRangeWorkRequest: DateRangeWorkRequest
     ): ResponseEntity<ApiResponse<List<HarvestUserWork>>>
