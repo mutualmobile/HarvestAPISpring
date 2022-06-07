@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 
 interface UserWorkApi {
-    @PostMapping(Endpoint.LOG_WORK)// fix this later, it should be a GET TODO
+    @PostMapping(Endpoint.GET_LOG_WORK)// fix this later, it should be a GET TODO
     fun getWorkLogsForDateRange(
         @RequestBody dateRangeWorkRequest: DateRangeWorkRequest
     ): ResponseEntity<ApiResponse<List<HarvestUserWork>>>
