@@ -6,10 +6,7 @@ import com.mutualmobile.praxisspringboot.data.models.orgs.OrganizationProject
 import com.mutualmobile.praxisspringboot.data.models.projects.HarvestUserWork
 import javax.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.*
 
 interface UserProjectApi {
     @PostMapping(Endpoint.ASSIGN_PROJECT)
@@ -20,6 +17,12 @@ interface UserProjectApi {
 
     @PostMapping(Endpoint.LOG_WORK)
     fun logWorkTime(@RequestBody userWork: HarvestUserWork): ResponseEntity<ApiResponse<Unit>>
+
+    @PutMapping(Endpoint.LOG_WORK)
+    fun editWorkTime(@RequestBody userWork: HarvestUserWork): ResponseEntity<ApiResponse<Unit>>
+
+    @DeleteMapping(Endpoint.LOG_WORK)
+    fun deleteWorkTime(@RequestBody userWork: HarvestUserWork): ResponseEntity<ApiResponse<Unit>>
 
     @GetMapping(Endpoint.USER_ASSIGNED_PROJECTS)
     fun getUserAssignedProjects(

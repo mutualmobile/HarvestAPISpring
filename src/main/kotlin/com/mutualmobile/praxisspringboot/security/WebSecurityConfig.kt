@@ -145,6 +145,14 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .hasAnyAuthority(
                 UserRole.ORG_USER.role,
             )
+            .antMatchers(HttpMethod.PUT,"${LOG_WORK}/**")
+            .hasAnyAuthority(
+                UserRole.ORG_USER.role,
+            )
+            .antMatchers(HttpMethod.DELETE,"${LOG_WORK}/**")
+            .hasAnyAuthority(
+                UserRole.ORG_USER.role,
+            )
             .antMatchers(HttpMethod.POST,"${GET_LOG_WORK}/**")
             .hasAnyAuthority(
                 UserRole.ORG_ADMIN.role,

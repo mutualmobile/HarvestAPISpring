@@ -85,10 +85,14 @@ class UserProjectServiceImpl : UserProjectService {
             )
     }
 
+    override fun deleteWork(userWork: HarvestUserWork) {
+        userWork.id?.let { userWorkRepository.deleteById(it) }
+    }
+
     override fun logWorkTime(harvestUserWork: HarvestUserWork): ApiResponse<Unit> {
         return try {
             userWorkRepository.save(harvestUserWork.toDbUserWork())
-            ApiResponse(message = "Work time logging successful!", data = Unit)
+            ApiResponse(message = "Work time logged successful!", data = Unit)
         } catch (e: Exception) {
             ApiResponse(message = buildString {
                 append("Couldn't log work time.")
@@ -103,12 +107,6 @@ class UserProjectServiceImpl : UserProjectService {
         return userWorkRepository.getAllUserIdsForProjectId(projectId = projectId)
     }
 }
-
-fun DBUserProjectAssignment.toHarvestUserProject() = HarvestUserProjectAssignment(
-    id = id,
-    userId = userId,
-    projectId = projectId
-)
 
 fun HarvestUserProjectAssignment.toDbUserProject() = DBUserProjectAssignment(
     userId = userId, projectId = projectId

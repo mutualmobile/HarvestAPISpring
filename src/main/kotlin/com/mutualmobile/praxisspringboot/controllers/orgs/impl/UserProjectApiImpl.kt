@@ -47,7 +47,20 @@ class UserProjectApiImpl : UserProjectApi {
         }
     }
 
+    override fun editWorkTime(userWork: HarvestUserWork): ResponseEntity<ApiResponse<Unit>> {
+        return saveWorkInternal(userWork)
+    }
+
+    override fun deleteWorkTime(userWork: HarvestUserWork): ResponseEntity<ApiResponse<Unit>> {
+        userProjectService.deleteWork(userWork)
+        return ResponseEntity.ok(ApiResponse(message = "The work will be deleted."))
+    }
+
     override fun logWorkTime(userWork: HarvestUserWork): ResponseEntity<ApiResponse<Unit>> {
+        return saveWorkInternal(userWork)
+    }
+
+    private fun saveWorkInternal(userWork: HarvestUserWork): ResponseEntity<ApiResponse<Unit>> {
         return try {
             val doesUserLinkedProjectExist = userProjectService.checkIfUserLinkedProjectExists(
                 projectId = userWork.projectId, userId = userWork.userId

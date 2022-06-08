@@ -14,4 +14,5 @@ interface UserProjectService {
 
     fun logWorkTime(harvestUserWork: HarvestUserWork): ApiResponse<Unit>
     fun getAllUserIdsFromProjectId(projectId: String): List<String> // List<UserId>
+    fun deleteWork(userWork: HarvestUserWork)
 }
