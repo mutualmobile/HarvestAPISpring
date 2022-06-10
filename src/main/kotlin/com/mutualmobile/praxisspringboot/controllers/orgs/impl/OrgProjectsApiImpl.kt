@@ -4,6 +4,7 @@ import com.mutualmobile.praxisspringboot.controllers.authuser.getToken
 import com.mutualmobile.praxisspringboot.controllers.orgs.OrgProjectsApi
 import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.orgs.OrganizationProject
+import com.mutualmobile.praxisspringboot.data.models.projects.OrgProjectsRequest
 import com.mutualmobile.praxisspringboot.data.user.RequestUser
 import com.mutualmobile.praxisspringboot.services.orgs.OrganizationProjectService
 import com.mutualmobile.praxisspringboot.services.orgs.UserProjectService
@@ -54,6 +55,14 @@ class OrgProjectsApiImpl : OrgProjectsApi {
                 limit = safeLimit,search=search
             )
         return ApiResponse(data = result)
+    }
+
+    override fun getProjectsFromIds(orgProjectsRequest: OrgProjectsRequest): ApiResponse<List<OrganizationProject>> {
+        return try {
+            ApiResponse(data = userProjectService.getProjectsForIds(orgProjectsRequest.projectIds))
+        } catch (e: Exception) {
+            ApiResponse(message = e.localizedMessage ?: "Unexpected error occurred!")
+        }
     }
 
     override fun createProject(

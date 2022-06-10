@@ -1,6 +1,7 @@
 package com.mutualmobile.praxisspringboot.services.orgs.impl
 
 import com.mutualmobile.praxisspringboot.data.ApiResponse
+import com.mutualmobile.praxisspringboot.data.models.orgs.OrganizationProject
 import com.mutualmobile.praxisspringboot.data.models.projects.HarvestUserWork
 import com.mutualmobile.praxisspringboot.data.user.HarvestUserProjectAssignment
 import com.mutualmobile.praxisspringboot.entities.orgs.DBOrgProjects
@@ -87,6 +88,10 @@ class UserProjectServiceImpl : UserProjectService {
 
     override fun deleteWork(userWork: HarvestUserWork) {
         userWork.id?.let { userWorkRepository.deleteById(it) }
+    }
+
+    override fun getProjectsForIds(projectIds: List<String>): List<OrganizationProject> {
+        return projectsRepository.findAllById(projectIds).map { it.toOrgProject() }
     }
 
     override fun logWorkTime(harvestUserWork: HarvestUserWork): ApiResponse<Unit> {
