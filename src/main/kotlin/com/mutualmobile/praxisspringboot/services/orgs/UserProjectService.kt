@@ -1,6 +1,7 @@
 package com.mutualmobile.praxisspringboot.services.orgs
 
 import com.mutualmobile.praxisspringboot.data.ApiResponse
+import com.mutualmobile.praxisspringboot.data.models.orgs.OrganizationProject
 import com.mutualmobile.praxisspringboot.data.models.projects.HarvestUserWork
 
 interface UserProjectService {
@@ -15,4 +16,5 @@ interface UserProjectService {
     fun logWorkTime(harvestUserWork: HarvestUserWork): ApiResponse<Unit>
     fun getAllUserIdsFromProjectId(projectId: String): List<String> // List<UserId>
     fun deleteWork(userWork: HarvestUserWork)
+    fun getProjectsForIds(projectIds: List<String>): List<OrganizationProject>
 }

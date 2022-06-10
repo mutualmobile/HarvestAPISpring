@@ -3,6 +3,7 @@ package com.mutualmobile.praxisspringboot.controllers.orgs
 import com.mutualmobile.praxisspringboot.controllers.Endpoint
 import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.orgs.OrganizationProject
+import com.mutualmobile.praxisspringboot.data.models.projects.OrgProjectsRequest
 import com.mutualmobile.praxisspringboot.data.user.RequestUser
 import javax.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
@@ -22,6 +23,11 @@ interface OrgProjectsApi {
         @RequestParam(value = Endpoint.Params.SEARCH_KEY, required = false) search:String?,
         httpServletRequest: HttpServletRequest
     ): ApiResponse<Pair<Int, List<OrganizationProject>>>
+
+    @PostMapping(Endpoint.PROJECTS)
+    fun getProjectsFromIds(
+        @RequestBody orgProjectsRequest: OrgProjectsRequest
+    ): ApiResponse<List<OrganizationProject>>
 
     @PostMapping(Endpoint.ORG_PROJECT)
     fun createProject(
