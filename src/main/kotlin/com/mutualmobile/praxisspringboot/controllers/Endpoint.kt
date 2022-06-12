@@ -31,6 +31,7 @@ object Endpoint {
 
     //Org main user // TODO write security for these endpoints.
     const val ORGANIZATION = "$API_URL/organization"
+    const val FIND_ORGANIZATION = "$ORGANIZATION/find-organization"
     const val ORG_USERS = "$ORGANIZATION/users"
     const val ORG_USER = "$ORGANIZATION/user"
     const val ORG_PROJECT = "$ORGANIZATION/project"
@@ -73,5 +74,6 @@ object Endpoint {
         const val NOTIFICATION_ID = "notificationId"
 
         const val ORG_IDENTIFIER = "identifier"
+        const val ORG_ID = "orgId"
     }
 }
