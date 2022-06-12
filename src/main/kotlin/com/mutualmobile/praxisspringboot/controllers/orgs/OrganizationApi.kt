@@ -29,6 +29,11 @@ interface OrganizationApi {
         @RequestParam(value = Endpoint.Params.ORG_IDENTIFIER, required = true) identifier: String
     ): ResponseEntity<ApiResponse<HarvestOrganization>>
 
+    @GetMapping(Endpoint.FIND_ORGANIZATION)
+    fun getOrganizationById(
+        @RequestParam(value = Endpoint.Params.ORG_ID, required = true) orgId: String
+    ): ResponseEntity<ApiResponse<HarvestOrganization>>
+
     @DeleteMapping(Endpoint.DELETE_ORGANIZATION)
     fun deleteOrganisation(
         @RequestParam(value = Endpoint.Params.ID, required = true) organisationId: String

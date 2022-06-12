@@ -40,6 +40,15 @@ class OrganizationApiImpl : OrganizationApi {
             .body(ApiResponse(message = "No organization found with the given identifier!"))
     }
 
+    override fun getOrganizationById(orgId: String): ResponseEntity<ApiResponse<HarvestOrganization>> {
+        val result = organizationService.findOrganizationById(orgId = orgId)
+        result?.let { nnResult ->
+            return ResponseEntity.ok(ApiResponse(message = null, data = nnResult))
+        }
+        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
+            .body(ApiResponse(message = "No organization found with the given id!"))
+    }
+
     override fun deleteOrganisation(organisationId: String): ResponseEntity<ApiResponse<Boolean>> {
         val result = organizationService.deleteOrganization(organisationId)
         return if (result) {
