@@ -122,6 +122,7 @@ fun DBUserWork.toHarvestUserWork() = HarvestUserWork(
     userId = userId,
     workDate = workDate,
     workHours = workHours,
+    workType = workType,
     note = note
 )
 
@@ -130,6 +131,7 @@ fun HarvestUserWork.toDbUserWork() = DBUserWork(
     userId = userId,
     workDate = workDate,
     workHours = workHours,
+    workType = workType,
     note = note
 ).apply {
     this@toDbUserWork.id?.let { nnId ->
