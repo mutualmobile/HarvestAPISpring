@@ -10,7 +10,7 @@ data class HarvestUserWork(
     val userId: String,
     val workDate: Date,
     val workHours: Float,
-    val workType: WorkType = WorkType.BILLABLE,
+    val workType: String,
     val note: String? = null
 )
 
