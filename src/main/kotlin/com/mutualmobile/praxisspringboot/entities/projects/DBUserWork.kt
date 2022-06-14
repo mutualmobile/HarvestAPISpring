@@ -16,7 +16,7 @@ class DBUserWork(
     /** Describes how many hours did the user work on this task */
     val workHours: Float,
     /** Describes the type of work the user did like Billable or Non-Billable */
-    val workType: WorkType,
+    val workType: String,
     /** Additional notes from user */
     val note: String? = null
 ): BaseEntity()
