@@ -15,9 +15,3 @@ data class DBOrgProjectUserEntry(
     val workType: UUID,
 ) :
     BaseEntity()
-
-
-@Entity
-@Table(name = "org_work_type")
-data class DBOrgWorkType(val title: String) : BaseEntity() // can be billable, non-billable, anything-custom etc..
-

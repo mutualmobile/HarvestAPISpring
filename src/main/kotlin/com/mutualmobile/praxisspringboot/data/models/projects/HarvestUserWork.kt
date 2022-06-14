@@ -10,5 +10,11 @@ data class HarvestUserWork(
     val userId: String,
     val workDate: Date,
     val workHours: Float,
+    val workType: String,
     val note: String? = null
 )
+
+enum class WorkType(val type: String) {
+    BILLABLE("1"),
+    NONBILLABLE("2")
+}
