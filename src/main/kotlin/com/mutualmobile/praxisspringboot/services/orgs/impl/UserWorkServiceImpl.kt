@@ -7,9 +7,9 @@ import com.mutualmobile.praxisspringboot.data.models.projects.WorkType
 import com.mutualmobile.praxisspringboot.repositories.orgs.OrgProjectsRepository
 import com.mutualmobile.praxisspringboot.repositories.orgs.UserWorkRepository
 import com.mutualmobile.praxisspringboot.services.orgs.UserWorkService
-import java.util.Date
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class UserWorkServiceImpl : UserWorkService {
@@ -29,7 +29,7 @@ class UserWorkServiceImpl : UserWorkService {
             val listOfWork = mutableListOf<HarvestUserWork>()
             userIds?.forEach { userId ->
                 listOfWork.addAll(
-                    userWorkRepository.findAllByWorkDateBetweenAndUserIdAAndWorkType(
+                    userWorkRepository.findAllByWorkDateBetweenAndUserId(
                         startDate = startDate,
                         endDate = endDate,
                         userId = userId,

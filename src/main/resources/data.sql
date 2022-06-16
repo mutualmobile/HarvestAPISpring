@@ -165,4 +165,4 @@ create table if not exists user_work
 alter table user_work
     owner to harvestapi;
 
-alter table user_work add column if not exists workType varchar(1) not null default '1';
+alter table user_work add column if not exists work_type varchar(1) not null default '1';
