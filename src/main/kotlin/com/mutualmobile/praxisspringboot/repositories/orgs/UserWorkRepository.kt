@@ -1,12 +1,18 @@
 package com.mutualmobile.praxisspringboot.repositories.orgs
 
+import com.mutualmobile.praxisspringboot.data.models.projects.WorkType
 import com.mutualmobile.praxisspringboot.entities.projects.DBUserWork
-import java.util.Date
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
+import java.util.*
 
 interface UserWorkRepository : JpaRepository<DBUserWork, String> {
-    fun findAllByWorkDateBetweenAndUserId(startDate: Date, endDate: Date, userId: String): List<DBUserWork>
+
+    @Query("SELECT u FROM user_work AS u WHERE u.work_date BETWEEN :startDate AND :endDate AND u.user_id=:userId AND u.work_type =:workType",
+        nativeQuery = true
+    )
+    fun findAllByWorkDateBetweenAndUserIdAAndWorkType(startDate: Date, endDate: Date, userId: String,workType: String?): List<DBUserWork>
 
     // TODO : Move getAllProjectIdsForUserId & getAllUserIdsForProjectId to their respective Repository (they don't belong here)
     @Query(

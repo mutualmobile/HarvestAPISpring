@@ -3,6 +3,7 @@ package com.mutualmobile.praxisspringboot.services.orgs.impl
 import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.orgs.OrganizationProject
 import com.mutualmobile.praxisspringboot.data.models.projects.HarvestUserWork
+import com.mutualmobile.praxisspringboot.data.models.projects.WorkType
 import com.mutualmobile.praxisspringboot.repositories.orgs.OrgProjectsRepository
 import com.mutualmobile.praxisspringboot.repositories.orgs.UserWorkRepository
 import com.mutualmobile.praxisspringboot.services.orgs.UserWorkService
@@ -21,16 +22,18 @@ class UserWorkServiceImpl : UserWorkService {
     override fun getWorkLogsForDateRange(
         startDate: Date,
         endDate: Date,
-        userIds: List<String>?
+        userIds: List<String>?,
+        workType: WorkType?
     ): ApiResponse<List<HarvestUserWork>> {
         return try {
             val listOfWork = mutableListOf<HarvestUserWork>()
             userIds?.forEach { userId ->
                 listOfWork.addAll(
-                    userWorkRepository.findAllByWorkDateBetweenAndUserId(
+                    userWorkRepository.findAllByWorkDateBetweenAndUserIdAAndWorkType(
                         startDate = startDate,
                         endDate = endDate,
-                        userId = userId
+                        userId = userId,
+                        workType = workType?.type
                     ).map { it.toHarvestUserWork() }
                 )
             }
