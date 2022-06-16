@@ -8,14 +8,14 @@ import java.util.*
 interface UserWorkRepository : JpaRepository<DBUserWork, String> {
 
     @Query(
-        "SELECT * FROM user_work AS u WHERE u.work_date BETWEEN :startDate AND :endDate AND u.user_id=:userId AND u.work_type =:workType",
+        "SELECT * FROM user_work AS u WHERE u.work_date BETWEEN :startDate AND :endDate AND u.user_id=:userId AND u.work_type LIKE :workType",
         nativeQuery = true
     )
     fun findAllByWorkDateBetweenAndUserId(
         startDate: Date,
         endDate: Date,
         userId: String,
-        workType: String?
+        workType: String
     ): List<DBUserWork>
 
     // TODO : Move getAllProjectIdsForUserId & getAllUserIdsForProjectId to their respective Repository (they don't belong here)

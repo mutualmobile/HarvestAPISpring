@@ -33,7 +33,7 @@ class UserWorkServiceImpl : UserWorkService {
                         startDate = startDate,
                         endDate = endDate,
                         userId = userId,
-                        workType = workType?.type
+                        workType = workType?.type?:"%"
                     ).map { it.toHarvestUserWork() }
                 )
             }
