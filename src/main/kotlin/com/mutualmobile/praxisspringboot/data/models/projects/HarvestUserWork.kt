@@ -14,6 +14,8 @@ data class HarvestUserWork(
     val note: String? = null
 )
 
+
+
 enum class WorkType(val type: String) {
     BILLABLE("1"),
     NONBILLABLE("2")

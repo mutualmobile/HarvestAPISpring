@@ -3,6 +3,7 @@ package com.mutualmobile.praxisspringboot.services.orgs.impl
 import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.orgs.OrganizationProject
 import com.mutualmobile.praxisspringboot.data.models.projects.HarvestUserWork
+import com.mutualmobile.praxisspringboot.data.models.projects.WorkType
 import com.mutualmobile.praxisspringboot.data.user.HarvestUserProjectAssignment
 import com.mutualmobile.praxisspringboot.entities.orgs.DBOrgProjects
 import com.mutualmobile.praxisspringboot.entities.projects.DBUserWork
@@ -46,9 +47,9 @@ class UserProjectServiceImpl : UserProjectService {
                             Pair(projectsRepository.findByIdOrNull(projectId), userRepository.findByIdOrNull(userId))
 
                         if (!errorProjectAssignmentIds.contains(errorPair)) {
-                            errorPair.first?.let { project->
-                                errorPair.second?.let { user->
-                                    errorProjectAssignmentIds.add(Pair(project,user))
+                            errorPair.first?.let { project ->
+                                errorPair.second?.let { user ->
+                                    errorProjectAssignmentIds.add(Pair(project, user))
                                 }
                             }
 
@@ -127,7 +128,9 @@ fun DBUserWork.toHarvestUserWork() = HarvestUserWork(
     userId = userId,
     workDate = workDate,
     workHours = workHours,
-    workType = workType,
+    workType = WorkType.values().find {
+        it.type == workType
+    }?.type ?: WorkType.NONBILLABLE.type,
     note = note
 )
 

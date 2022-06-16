@@ -3,12 +3,13 @@ package com.mutualmobile.praxisspringboot.services.orgs.impl
 import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.orgs.OrganizationProject
 import com.mutualmobile.praxisspringboot.data.models.projects.HarvestUserWork
+import com.mutualmobile.praxisspringboot.data.models.projects.WorkType
 import com.mutualmobile.praxisspringboot.repositories.orgs.OrgProjectsRepository
 import com.mutualmobile.praxisspringboot.repositories.orgs.UserWorkRepository
 import com.mutualmobile.praxisspringboot.services.orgs.UserWorkService
-import java.util.Date
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class UserWorkServiceImpl : UserWorkService {
@@ -21,7 +22,8 @@ class UserWorkServiceImpl : UserWorkService {
     override fun getWorkLogsForDateRange(
         startDate: Date,
         endDate: Date,
-        userIds: List<String>?
+        userIds: List<String>?,
+        workType: WorkType?
     ): ApiResponse<List<HarvestUserWork>> {
         return try {
             val listOfWork = mutableListOf<HarvestUserWork>()
@@ -30,7 +32,8 @@ class UserWorkServiceImpl : UserWorkService {
                     userWorkRepository.findAllByWorkDateBetweenAndUserId(
                         startDate = startDate,
                         endDate = endDate,
-                        userId = userId
+                        userId = userId,
+                        workType = workType?.type?:"%"
                     ).map { it.toHarvestUserWork() }
                 )
             }

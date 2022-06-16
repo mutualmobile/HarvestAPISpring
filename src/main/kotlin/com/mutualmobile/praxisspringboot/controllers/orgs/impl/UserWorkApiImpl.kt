@@ -4,6 +4,7 @@ import com.mutualmobile.praxisspringboot.controllers.orgs.UserWorkApi
 import com.mutualmobile.praxisspringboot.data.ApiResponse
 import com.mutualmobile.praxisspringboot.data.models.projects.DateRangeWorkRequest
 import com.mutualmobile.praxisspringboot.data.models.projects.HarvestUserWork
+import com.mutualmobile.praxisspringboot.data.models.projects.WorkType
 import com.mutualmobile.praxisspringboot.services.orgs.UserWorkService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -22,7 +23,11 @@ class UserWorkApiImpl : UserWorkApi {
             val result = userWorkService.getWorkLogsForDateRange(
                 startDate = dateRangeWorkRequest.startDate,
                 endDate = dateRangeWorkRequest.endDate,
-                userIds = dateRangeWorkRequest.userIds
+                userIds = dateRangeWorkRequest.userIds,
+                workType = dateRangeWorkRequest.workType?.let {
+                    WorkType.valueOf(it)
+                }
+
             )
             if (result.data == null) {
                 ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(result)
